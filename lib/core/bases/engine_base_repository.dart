@@ -65,7 +65,7 @@ abstract class EngineBaseRepository extends GetConnect {
     httpClient
       ..timeout = timeout
       ..maxAuthRetries = 4
-      ..userAgent = 'https://app.lyzer.tech'
+      ..userAgent = 'https://app.engine.tech'
       ..errorSafety = errorSafety
       ..addRequestModifier<Object?>((final request) async {
         if (autoAuthorization) {
