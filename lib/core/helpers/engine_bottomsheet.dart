@@ -6,9 +6,14 @@ import 'package:get/get.dart';
 class EngineBottomsheet<T> {
   EngineBottomsheet._();
 
+  /// Displays a bottom sheet.
+  ///
+  /// Set [persistent] to keep the bottom sheet visible when navigating
+  /// to a new route.
   static Future<T?> show<T>({
     required final Widget content,
     final bool isDismissible = true,
+    final bool persistent = false,
     final bool enableDrag = true,
     final bool isScrollControlled = false,
     final bool needPageIsLoaded = false,
@@ -17,6 +22,7 @@ class EngineBottomsheet<T> {
     if (!needPageIsLoaded) {
       return await _makeBottomsheet(
         content: content,
+        persistent: persistent,
         enableDrag: enableDrag,
         isDismissible: isDismissible,
         isScrollControlled: isScrollControlled,
@@ -28,15 +34,17 @@ class EngineBottomsheet<T> {
       (final _) async {
         final result = await _makeBottomsheet(
           content: content,
+          persistent: persistent,
           enableDrag: enableDrag,
           isDismissible: isDismissible,
           isScrollControlled: isScrollControlled,
           onClose: onClose,
         );
 
-        if (result == null && !isDismissible) {
+        if (result == null && persistent) {
           return _makeBottomsheet(
             content: content,
+            persistent: persistent,
             enableDrag: enableDrag,
             isDismissible: isDismissible,
             isScrollControlled: isScrollControlled,
@@ -49,9 +57,11 @@ class EngineBottomsheet<T> {
     return null;
   }
 
+  /// Internal method that actually shows the bottom sheet.
   static Future<T?> _makeBottomsheet<T>({
     required final Widget content,
     required final bool isDismissible,
+    required final bool persistent,
     required final bool enableDrag,
     required final bool isScrollControlled,
     final VoidCallback? onClose,
@@ -61,7 +71,7 @@ class EngineBottomsheet<T> {
       isDismissible: isDismissible,
       enableDrag: enableDrag,
       isScrollControlled: isScrollControlled,
-      persistent: isDismissible,
+      persistent: persistent,
     ).whenComplete(() => onClose?.call());
     return result;
   }
