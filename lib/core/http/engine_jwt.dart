@@ -14,10 +14,10 @@ class EngineJwt {
     }
     try {
       final payloadBase64 = splitToken[1]; // Payload is always the index 1
-      // Base64 should be multiple of 4. Normalize the payload before decode it
-      final normalizedPayload = base64.normalize(payloadBase64);
-      // Decode payload, the result is a String
-      final payloadString = utf8.decode(base64.decode(normalizedPayload));
+      // JWT tokens are base64Url encoded. Normalize the payload before decoding
+      final normalizedPayload = base64Url.normalize(payloadBase64);
+      // Decode payload using base64Url to support '-' and '_' characters
+      final payloadString = utf8.decode(base64Url.decode(normalizedPayload));
       // Parse the String to a Map<String, dynamic>
       final decodedPayload = jsonDecode(payloadString);
 
