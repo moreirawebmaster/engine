@@ -49,8 +49,10 @@ class TestUtils {
 
   /// Configura o GetX para testes
   static void setupGetxForTesting() {
-    Get.reset();
-    Get.config(enableLog: false);
+    Get
+      ..reset()
+      ..testMode = true
+      ..config(enableLog: false);
   }
 
   /// Limpa o GetX após testes
