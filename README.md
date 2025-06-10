@@ -338,10 +338,10 @@ class UserRepository extends EngineBaseRepository implements IUserRepository {
 ## 🧪 Testes
 
 ### **Status dos Testes**
-- ✅ **Implementados:** 81 testes passando (+28 novos)
-- ✅ **Cobertura:** FASE 1 Concluída + FASE 2A Iniciada
-- ✅ **Módulos testados:** HTTP Result, User Model, **Token Model** 
-- 🔄 **Em desenvolvimento:** Extensions, Repositories, Helpers
+- ✅ **Implementados:** 195 testes passando (+37 novos para Logging!)
+- ✅ **Cobertura:** FASE 1 ✅ + FASE 2A ✅ + FASE 2B ✅ + **FASE 2C ✅ PARCIAL**
+- ✅ **Módulos testados:** HTTP Result, User Model, Token Model, Map Extensions, String Extensions, **EngineLog**
+- 🔄 **Em desenvolvimento:** Outros Helpers (Message, Repository)
 
 ### **Estrutura de Testes Implementada**
 
@@ -349,6 +349,11 @@ class UserRepository extends EngineBaseRepository implements IUserRepository {
 test/
 ├── unit/                          # Testes unitários
 │   ├── core/                     # Testes do core
+│   │   ├── extensions/           # ✅ Extensions - 77 testes
+│   │   │   ├── map_extension_test.dart          # 41 testes
+│   │   │   └── string_extension_test.dart       # 36 testes
+│   │   ├── helpers/              # ✅ Helpers - 37 testes
+│   │   │   └── engine_log_test.dart             # 37 testes
 │   │   └── http/                 # ✅ HTTP - 32 testes
 │   │       └── engine_http_result_test.dart
 │   └── data/                     # Testes da camada de dados
@@ -380,11 +385,11 @@ flutter test --coverage
 flutter test test/unit/core/http/engine_http_result_test.dart
 ```
 
-### **Próximos Testes (FASE 2B)**
-- Extensions (map_extension, string_extension)
-- Helpers (engine_log, engine_message)
-- EngineBaseRepository (HTTP methods, interceptors)
-- Additional Models (credential_token, firebase_model)
+### **Próximos Testes (FASE 2C - Helpers)**
+- ✅ EngineLog (sistema de logging crítico) ⭐⭐⭐ - **37 testes implementados**
+- EngineMessage (sistema de mensagens) ⭐⭐
+- EngineBaseRepository (HTTP methods, interceptors) ⭐⭐⭐
+- Additional Models (credential_token, firebase_model) ⭐⭐
 
 ## 🤝 Contribuição
 
