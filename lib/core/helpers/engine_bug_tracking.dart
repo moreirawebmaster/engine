@@ -36,18 +36,18 @@ class EngineBugTracking {
   ///
   /// [key] The key for the custom data
   /// [value] The value for the custom data
-  static void setCustomKey(final String key, final dynamic value) {
+  static Future<void> setCustomKey(final String key, final dynamic value) async {
     if (_isEnableFirebaseCrashlytics) {
-      _crashlytics?.setCustomKey(key, value.toString());
+      await _crashlytics?.setCustomKey(key, value.toString());
     }
   }
 
   /// Set user identifier for crash reports
   ///
   /// [identifier] The user identifier to set
-  static void setUserIdentifier(final String identifier) {
+  static Future<void> setUserIdentifier(final String identifier) async {
     if (_isEnableFirebaseCrashlytics) {
-      _crashlytics?.setUserIdentifier(identifier);
+      await _crashlytics?.setUserIdentifier(identifier);
     }
   }
 

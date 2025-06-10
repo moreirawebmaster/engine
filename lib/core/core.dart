@@ -13,4 +13,3 @@ export 'routes/routes.dart';
 export 'services/services.dart';
 export 'settings/settings.dart';
 export 'typedefs/typedefs.dart';
-export 'widgets/widgets.dart';

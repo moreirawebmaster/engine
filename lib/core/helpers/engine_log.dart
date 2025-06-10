@@ -11,14 +11,14 @@ class EngineLog {
   /// The name used for all log messages
   static const String _name = 'ENGINE_LOG';
 
-  static void _logWithLevel(
+  static Future<void> _logWithLevel(
     final String message, {
     final String? logName,
     final EngineLogLevel? level,
     final Object? error,
     final StackTrace? stackTrace,
     final Map<String, dynamic>? data,
-  }) {
+  }) async {
     final levelLog = level ?? EngineLogLevel.info;
     final prefix = _getLevelPrefix(levelLog);
     final dataString = data == null ? '' : '- [Data]: ${data.toFormattedString()}';
@@ -37,7 +37,7 @@ class EngineLog {
     unawaited(EngineBugTracking.log(logMessage));
 
     if (levelLog == EngineLogLevel.error || levelLog == EngineLogLevel.fatal) {
-      EngineBugTracking.recordError(
+      await EngineBugTracking.recordError(
         error ?? Exception(logMessage),
         stackTrace ?? StackTrace.current,
         isFatal: levelLog == EngineLogLevel.fatal,

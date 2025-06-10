@@ -114,10 +114,10 @@ class EngineCoreDependency {
   /// [child] is the new dependency to be registered.
   ///
   /// [tag] is the tag of the dependency.
-  void replace<P>(final P child, {final String? tag}) {
+  Future<void> replace<P>(final P child, {final String? tag}) async {
     final info = GetInstance().getInstanceInfo<P>(tag: tag);
     final permanent = (info.isPermanent ?? false);
-    delete<P>(tag: tag, force: permanent);
+    await delete<P>(tag: tag, force: permanent);
     put(child, tag: tag, permanent: permanent);
   }
 
@@ -130,10 +130,10 @@ class EngineCoreDependency {
   ///
   /// [fenix] is a boolean indicating whether the dependency should be
   /// recreated when it is removed.
-  void lazyReplace<P>(final InstanceBuilderCallback<P> builder, {final String? tag, final bool? fenix}) {
+  Future<void> lazyReplace<P>(final InstanceBuilderCallback<P> builder, {final String? tag, final bool? fenix}) async {
     final info = GetInstance().getInstanceInfo<P>(tag: tag);
     final permanent = (info.isPermanent ?? false);
-    delete<P>(tag: tag, force: permanent);
+    await delete<P>(tag: tag, force: permanent);
     lazyPut(builder, tag: tag, fenix: fenix ?? permanent);
   }
 }

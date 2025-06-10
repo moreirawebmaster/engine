@@ -1,6 +1,6 @@
 abstract class IEngineLocalStorageRepository {
   static const String storageName = 'local_storage';
-  bool exists(final key);
+  bool exists(final String key);
   Future<void> setObject<T>(final String key, final T data);
   Future<void> setString(final String key, final String data);
   Future<void> setJson(final String key, final dynamic data);

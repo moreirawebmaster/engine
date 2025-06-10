@@ -12,14 +12,21 @@ class EngineUserService extends EngineBaseService {
   @override
   void onInit() {
     _user = _localStorageRepository.getObject<EngineUserModel, EngineMap>(EngineConstant.userKey, fromMap: EngineUserModel.fromMap) ?? EngineUserModel.empty();
-    _setBugTrackingUser(_user);
     super.onInit();
+  }
+
+  @override
+  Future<void> onReady() async {
+    await _setBugTrackingUser(_user);
+    super.onReady();
   }
 
   Future<void> save(final EngineUserModel user) async {
     _user = user;
-    _setBugTrackingUser(user);
-    await _localStorageRepository.setObject<EngineUserModel>(EngineConstant.userKey, user);
+    await Future.wait([
+      _setBugTrackingUser(user),
+      _localStorageRepository.setObject<EngineUserModel>(EngineConstant.userKey, user),
+    ]);
   }
 
   Future<void> clean() async {
@@ -27,9 +34,11 @@ class EngineUserService extends EngineBaseService {
     _user = EngineUserModel.empty();
   }
 
-  void _setBugTrackingUser(final EngineUserModel user) {
-    EngineBugTracking.setUserIdentifier(user.id.toString());
-    EngineBugTracking.setCustomKey('email', user.email);
-    EngineBugTracking.setCustomKey('name', user.name);
+  Future<void> _setBugTrackingUser(final EngineUserModel user) async {
+    await Future.wait([
+      EngineBugTracking.setUserIdentifier(user.id.toString()),
+      EngineBugTracking.setCustomKey('email', user.email),
+      EngineBugTracking.setCustomKey('name', user.name),
+    ]);
   }
 }

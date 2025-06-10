@@ -1,6 +1,6 @@
 name: engine
 description: This package provides engine core, such as helpers, services, dependencies and reusable components.
-version: 0.0.35
+version: 1.0.0
 publish_to: none
 
 environment:
@@ -9,26 +9,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_analytics: 11.3.4
-  firebase_core: 3.7.0
-  firebase_crashlytics: 4.1.4
-  firebase_messaging: 15.1.4
-  firebase_remote_config: 5.1.4
-  get: 4.6.6
+  firebase_analytics: 11.5.0
+  firebase_core: 3.14.0
+  firebase_crashlytics: 4.3.7
+  firebase_messaging: 15.2.7
+  firebase_remote_config: 5.4.5
+  get: 4.7.2
   get_storage: 2.1.1
-  lucid_validation: 1.1.0
-  intl: 0.19.0
-  package_info_plus: 8.1.3
+  lucid_validation: 1.3.1
+  intl: 0.20.2
+  package_info_plus: 8.3.0
   url_launcher: 6.3.1
-  google_mlkit_barcode_scanning: 0.14.1
-  camera: 0.11.1
   internet_connection_checker_plus: 2.7.2
 
   design_system:
     git:
-      url: https://360hyper@dev.azure.com/360hyper/360hyper/_git/App-DesignSystem
+      url: https://github.com/moreirawebmaster/DesignSystem.git
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: 5.0.0
+  flutter_lints: 6.0.0
