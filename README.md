@@ -338,10 +338,10 @@ class UserRepository extends EngineBaseRepository implements IUserRepository {
 ## 🧪 Testes
 
 ### **Status dos Testes**
-- ✅ **Implementados:** 195 testes passando (+37 novos para Logging!)
-- ✅ **Cobertura:** FASE 1 ✅ + FASE 2A ✅ + FASE 2B ✅ + **FASE 2C ✅ PARCIAL**
-- ✅ **Módulos testados:** HTTP Result, User Model, Token Model, Map Extensions, String Extensions, **EngineLog**
-- 🔄 **Em desenvolvimento:** Outros Helpers (Message, Repository)
+- ✅ **Implementados:** 228 testes passando (+33 novos para Mensagens!)  
+- ✅ **Cobertura:** FASE 1 ✅ + FASE 2A ✅ + FASE 2B ✅ + **FASE 2C ✅ AVANÇANDO**
+- ✅ **Módulos testados:** HTTP Result, User Model, Token Model, Map Extensions, String Extensions, **EngineLog**, **EngineMessage**
+- 🔄 **Em desenvolvimento:** Repository Base, Modelos Adicionais
 
 ### **Estrutura de Testes Implementada**
 
@@ -352,8 +352,9 @@ test/
 │   │   ├── extensions/           # ✅ Extensions - 77 testes
 │   │   │   ├── map_extension_test.dart          # 41 testes
 │   │   │   └── string_extension_test.dart       # 36 testes
-│   │   ├── helpers/              # ✅ Helpers - 37 testes
-│   │   │   └── engine_log_test.dart             # 37 testes
+│   │   ├── helpers/              # ✅ Helpers - 70 testes
+│   │   │   ├── engine_log_test.dart             # 37 testes
+│   │   │   └── engine_message_test.dart         # 33 testes
 │   │   └── http/                 # ✅ HTTP - 32 testes
 │   │       └── engine_http_result_test.dart
 │   └── data/                     # Testes da camada de dados
@@ -387,7 +388,7 @@ flutter test test/unit/core/http/engine_http_result_test.dart
 
 ### **Próximos Testes (FASE 2C - Helpers)**
 - ✅ EngineLog (sistema de logging crítico) ⭐⭐⭐ - **37 testes implementados**
-- EngineMessage (sistema de mensagens) ⭐⭐
+- ✅ EngineMessage (sistema de mensagens) ⭐⭐ - **33 testes implementados**
 - EngineBaseRepository (HTTP methods, interceptors) ⭐⭐⭐
 - Additional Models (credential_token, firebase_model) ⭐⭐
 
