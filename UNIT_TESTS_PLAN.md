@@ -6,10 +6,10 @@ Este documento apresenta uma análise completa dos testes de unidade necessário
 
 ## 📊 Resumo Executivo
 
-**Status Atual:** ~15% de cobertura de testes ✅  
-**Testes Implementados:** 53 testes passando  
+**Status Atual:** ~25% de cobertura de testes ✅  
+**Testes Implementados:** 81 testes passando (+28 novos)  
 **Testes Necessários:** 127 arquivos de teste  
-**Prioridade Alta:** 45 testes (12 concluídos ✅)  
+**Prioridade Alta:** 45 testes (15 concluídos ✅)  
 **Prioridade Média:** 52 testes  
 **Prioridade Baixa:** 30 testes  
 
@@ -154,11 +154,16 @@ test/
 - ✅ Handling de dados inválidos
 ```
 
-#### 4.2 engine_token_model_test.dart ⭐⭐⭐
+#### 4.2 engine_token_model_test.dart ⭐⭐⭐ ✅ CONCLUÍDO
 ```dart
-- ✅ Token validation
-- ✅ Expiration check
-- ✅ Serialization
+- ✅ Serialização toMap/fromMap (28 testes implementados)
+- ✅ Token validation (valid/invalid/expired)
+- ✅ JWT expiration check com lógica especial (+7 dias)
+- ✅ Factory constructors (fromMap, fromJson, empty)
+- ✅ Edge cases (malformed JWT, whitespace, long tokens)
+- ✅ Integration com EngineJwt decode
+- ✅ Business logic combinations
+- ✅ Immutability e round-trip conversions
 ```
 
 ### 5. Core Helpers (11 testes)
@@ -310,16 +315,23 @@ test/
    ✅ Total: 53 testes passando em ~3s
    ```
 
-### **FASE 2: Core Services (Semana 3-4) 🔄 EM PROGRESSO**
-4. **Testes de serviços principais (Estratégia Revisada)**
+### **FASE 2A: Models Críticos (Semana 3-4) ✅ CONCLUÍDA**
+4. **✅ Models de segurança implementados**
    ```bash
-   ⚠️  Desafios encontrados: Mocking complexo do GetX
-   📋 Nova abordagem: Focar em lógica de negócio, não infraestrutura
-   
-   🎯 Próximas implementações:
-   # 1. engine_base_repository_test.dart (Sem GetX)
-   # 2. engine_base_controller_test.dart (Lógica pura)
-   # 3. Models adicionais (engine_token_model_test.dart)
+   ✅ engine_token_model_test.dart (28 testes implementados)
+   ✅ Integração com EngineJwt funcionando
+   ✅ Lógica de expiração +7 dias testada
+   ✅ Edge cases e validação completa
+   ```
+
+### **FASE 2B: Extensions e Helpers (Semana 5-6) 🔄 EM PROGRESSO**
+5. **Próximas implementações (Estratégia Revisada)**
+   ```bash
+   🎯 Próximas implementações priorizadas:
+   # 1. map_extension_test.dart (Extensões utilitárias)
+   # 2. engine_log_test.dart (Sistema de logging)
+   # 3. string_extension_test.dart (Extensões de string)
+   # 4. engine_message_test.dart (Sistema de mensagens)
    ```
 
 ### **FASE 3: Base Classes (Semana 5-6)**
@@ -362,7 +374,8 @@ test/
 | Fase | Cobertura Alvo | Módulos | Status |
 |------|----------------|---------|--------|
 | 1 | 15% | HTTP + Setup | ✅ Concluída (53 testes) |
-| 2 | 35% | Base Classes + Models | 🔄 Em progresso |
+| 2A | 25% | Models Críticos | ✅ Concluída (81 testes) |
+| 2B | 35% | Extensions + Helpers | 🔄 Em progresso |
 | 3 | 55% | Helpers + Extensions | 📋 Planejada |
 | 4 | 70% | Repositories + Services | 📋 Planejada |
 | 5 | 85% | Initializers + Routes | 📋 Planejada |
@@ -425,22 +438,23 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
 
 ## 🚀 PRÓXIMOS PASSOS RECOMENDADOS
 
-### **IMEDIATO (Fase 2A):**
-1. **engine_token_model_test.dart** - Modelo crítico para autenticação
-2. **engine_base_repository_test.dart** - Métodos HTTP sem GetX
-3. **map_extension_test.dart** - Extensões utilitárias importantes
+### **IMEDIATO (Fase 2B) - EXTENSIONS:**
+1. **map_extension_test.dart** - Extensões utilitárias importantes ⭐⭐
+2. **string_extension_test.dart** - Extensões de string ⭐⭐
 
-### **MÉDIO PRAZO (Fase 2B):**
-4. **engine_log_test.dart** - Sistema de logging crítico
-5. **engine_message_test.dart** - Sistema de mensagens
-6. **string_extension_test.dart** - Extensões de string
+### **MÉDIO PRAZO (Fase 2C) - HELPERS:**
+3. **engine_log_test.dart** - Sistema de logging crítico ⭐⭐⭐
+4. **engine_message_test.dart** - Sistema de mensagens ⭐⭐
+
+### **LONGO PRAZO (Fase 3) - REPOSITORIES:**
+5. **engine_base_repository_test.dart** - Métodos HTTP sem GetX ⭐⭐⭐
 
 ### **COMANDO PARA CONTINUAR:**
 ```bash
 # Implementar próximo conjunto de testes
-flutter test --reporter=expanded
+flutter test test/unit/core/extensions/ --reporter=expanded
 ```
 
 ---
 
-**⚡ PRÓXIMA AÇÃO:** Implementar **engine_token_model_test.dart** como próximo teste crítico. 
+**⚡ PRÓXIMA AÇÃO:** Implementar **map_extension_test.dart** como próximo teste de utilidade. 

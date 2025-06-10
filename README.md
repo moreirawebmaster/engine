@@ -338,10 +338,10 @@ class UserRepository extends EngineBaseRepository implements IUserRepository {
 ## 🧪 Testes
 
 ### **Status dos Testes**
-- ✅ **Implementados:** 53 testes passando
-- ✅ **Cobertura:** Implementação inicial da FASE 1
-- ✅ **Módulos testados:** HTTP Result, User Model
-- 🔄 **Em desenvolvimento:** Base Repository, Services
+- ✅ **Implementados:** 81 testes passando (+28 novos)
+- ✅ **Cobertura:** FASE 1 Concluída + FASE 2A Iniciada
+- ✅ **Módulos testados:** HTTP Result, User Model, **Token Model** 
+- 🔄 **Em desenvolvimento:** Extensions, Repositories, Helpers
 
 ### **Estrutura de Testes Implementada**
 
@@ -352,8 +352,9 @@ test/
 │   │   └── http/                 # ✅ HTTP - 32 testes
 │   │       └── engine_http_result_test.dart
 │   └── data/                     # Testes da camada de dados
-│       └── models/               # ✅ Models - 21 testes
-│           └── engine_user_model_test.dart
+│       └── models/               # ✅ Models - 49 testes
+│           ├── engine_user_model_test.dart      # 21 testes
+│           └── engine_token_model_test.dart     # 28 testes
 ├── helpers/                      # ✅ Utilitários de teste
 │   ├── test_utils.dart          # Helpers comum
 │   └── fixtures/                # Dados de teste
@@ -379,11 +380,11 @@ flutter test --coverage
 flutter test test/unit/core/http/engine_http_result_test.dart
 ```
 
-### **Próximos Testes (FASE 2)**
+### **Próximos Testes (FASE 2B)**
+- Extensions (map_extension, string_extension)
+- Helpers (engine_log, engine_message)
 - EngineBaseRepository (HTTP methods, interceptors)
-- EngineNavigationService (navegação)
-- EngineTokenService (autenticação)
-- EngineBaseController (estados, lifecycle)
+- Additional Models (credential_token, firebase_model)
 
 ## 🤝 Contribuição
 

@@ -33,19 +33,70 @@ class TestUtils {
 
   /// Cria um token de teste válido
   static Map<String, dynamic> createValidTokenData() => {
-        'accessToken': 'valid-access-token',
-        'refreshToken': 'valid-refresh-token',
-        'expiresIn': DateTime.now().add(const Duration(hours: 1)).millisecondsSinceEpoch,
-        'tokenType': 'Bearer',
+        'AccessToken': createValidJwtToken(),
+        'RefreshToken': createValidJwtToken(isRefresh: true),
       };
+
+  /// Cria um JWT token válido para testes
+  static String createValidJwtToken({final bool isRefresh = false}) {
+    final now = DateTime.now();
+    final exp = now.add(const Duration(hours: 1)).millisecondsSinceEpoch ~/ 1000;
+    final iat = now.millisecondsSinceEpoch ~/ 1000;
+
+    // Header (typ: JWT, alg: HS256)
+    const header = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';
+
+    // Payload
+    final payload = {
+      'sub': '1234567890',
+      'name': isRefresh ? 'Refresh Token' : 'Access Token',
+      'iat': iat,
+      'exp': exp,
+      'scope': isRefresh ? 'refresh' : 'access',
+    };
+
+    final payloadJson = json.encode(payload);
+    final payloadBase64 = base64Url.encode(utf8.encode(payloadJson));
+
+    // Signature (fake - só para testes)
+    const signature = 'SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+
+    return '$header.$payloadBase64.$signature';
+  }
 
   /// Cria um token de teste expirado
   static Map<String, dynamic> createExpiredTokenData() => {
-        'accessToken': 'expired-access-token',
-        'refreshToken': 'expired-refresh-token',
-        'expiresIn': DateTime.now().subtract(const Duration(hours: 1)).millisecondsSinceEpoch,
-        'tokenType': 'Bearer',
+        'AccessToken': createExpiredJwtToken(),
+        'RefreshToken': createExpiredJwtToken(isRefresh: true),
       };
+
+  /// Cria um JWT token expirado para testes
+  static String createExpiredJwtToken({final bool isRefresh = false}) {
+    final now = DateTime.now();
+    // Precisa estar expirado MESMO com os 7 dias de extensão do EngineTokenModel
+    final exp = now.subtract(const Duration(days: 8)).millisecondsSinceEpoch ~/ 1000;
+    final iat = now.subtract(const Duration(days: 9)).millisecondsSinceEpoch ~/ 1000;
+
+    // Header (typ: JWT, alg: HS256)
+    const header = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';
+
+    // Payload
+    final payload = {
+      'sub': '1234567890',
+      'name': isRefresh ? 'Expired Refresh Token' : 'Expired Access Token',
+      'iat': iat,
+      'exp': exp,
+      'scope': isRefresh ? 'refresh' : 'access',
+    };
+
+    final payloadJson = json.encode(payload);
+    final payloadBase64 = base64Url.encode(utf8.encode(payloadJson));
+
+    // Signature (fake - só para testes)
+    const signature = 'SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+
+    return '$header.$payloadBase64.$signature';
+  }
 
   /// Configura o GetX para testes
   static void setupGetxForTesting() {
