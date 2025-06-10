@@ -1,0 +1,30 @@
+{
+    "success_response": {
+        "status": "success",
+        "data": {
+            "id": 1,
+            "message": "Operation completed successfully"
+        },
+        "timestamp": "2024-01-01T12:00:00Z"
+    },
+    "error_response": {
+        "status": "error",
+        "error": {
+            "code": "VALIDATION_ERROR",
+            "message": "Invalid input data",
+            "details": [
+                "Field 'email' is required",
+                "Field 'name' must not be empty"
+            ]
+        },
+        "timestamp": "2024-01-01T12:00:00Z"
+    },
+    "server_error_response": {
+        "status": "error",
+        "error": {
+            "code": "INTERNAL_SERVER_ERROR",
+            "message": "An internal server error occurred"
+        },
+        "timestamp": "2024-01-01T12:00:00Z"
+    }
+}

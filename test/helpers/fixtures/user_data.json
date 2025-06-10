@@ -1,0 +1,27 @@
+{
+    "valid_user": {
+        "id": 1,
+        "name": "João Silva",
+        "email": "joao.silva@example.com",
+        "imageUrl": "https://example.com/avatar/joao.jpg",
+        "permissions": [
+            "read",
+            "write",
+            "admin"
+        ]
+    },
+    "user_without_permissions": {
+        "id": 2,
+        "name": "Maria Santos",
+        "email": "maria.santos@example.com",
+        "imageUrl": "https://example.com/avatar/maria.jpg",
+        "permissions": []
+    },
+    "invalid_user": {
+        "id": null,
+        "name": "",
+        "email": "invalid-email",
+        "imageUrl": "",
+        "permissions": null
+    }
+}
