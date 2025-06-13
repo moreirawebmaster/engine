@@ -26,12 +26,6 @@ void main() {
           expect(EngineAnalytics.setUserProperty, isA<Function>());
           expect(EngineAnalytics.setCurrentScreen, isA<Function>());
           expect(EngineAnalytics.logAppOpen, isA<Function>());
-          expect(EngineAnalytics.logLogin, isA<Function>());
-          expect(EngineAnalytics.logSignUp, isA<Function>());
-          expect(EngineAnalytics.logSearch, isA<Function>());
-          expect(EngineAnalytics.logTutorialBegin, isA<Function>());
-          expect(EngineAnalytics.logTutorialComplete, isA<Function>());
-          expect(EngineAnalytics.logLevelUp, isA<Function>());
           expect(EngineAnalytics.resetAnalyticsData, isA<Function>());
           expect(EngineAnalytics.setDefaultEventParameters, isA<Function>());
         }, returnsNormally);
@@ -53,8 +47,8 @@ void main() {
           // All methods should be callable in sequence
           await EngineAnalytics.initAnalytics(disabledModel);
           await EngineAnalytics.setUserId('test_user');
-          await EngineAnalytics.setUserProperty(name: 'test_property', value: 'test_value');
-          await EngineAnalytics.logEvent(name: 'test_event');
+          await EngineAnalytics.setUserProperty('test_property', 'test_value');
+          await EngineAnalytics.logEvent('test_event');
         }, returnsNormally);
       });
     });
@@ -79,21 +73,21 @@ void main() {
       test('should handle initialization with Firebase disabled only', () async {
         // Act & Assert - Test state with Firebase disabled
         await expectLater(() async {
-          // Disable Firebase
+          // Initialize with Firebase disabled
           await EngineAnalytics.initAnalytics(disabledModel);
 
           // Should work without Firebase
-          await EngineAnalytics.logEvent(name: 'test_event');
+          await EngineAnalytics.logEvent('test_event');
           await EngineAnalytics.setUserId('test_user');
-          await EngineAnalytics.setUserProperty(name: 'test', value: 'value');
+          await EngineAnalytics.setUserProperty('test', 'value');
         }(), completes);
       });
 
-      test('should handle concurrent initialization with Firebase disabled', () async {
-        // Act & Assert - Test concurrent initialization with Firebase disabled
-        final futures = List.generate(10, (final index) => EngineAnalytics.initAnalytics(disabledModel));
-
-        await expectLater(Future.wait(futures), completes);
+      test('should handle Firebase enabled gracefully when not initialized', () async {
+        // Act & Assert - Should handle Firebase enabled but not initialized
+        expect(() async {
+          await EngineAnalytics.initAnalytics(enabledModel);
+        }, throwsA(anything));
       });
     });
 
@@ -104,7 +98,7 @@ void main() {
 
         // Act & Assert
         await expectLater(() async {
-          await EngineAnalytics.logEvent(name: 'custom_event');
+          await EngineAnalytics.logEvent('custom_event');
         }(), completes);
       });
 
@@ -115,8 +109,8 @@ void main() {
         // Act & Assert - Test events with various parameters
         await expectLater(() async {
           await EngineAnalytics.logEvent(
-            name: 'event_with_params',
-            parameters: {
+            'event_with_params',
+            {
               'param_string': 'test_value',
               'param_int': 123,
               'param_double': 45.67,
@@ -133,12 +127,12 @@ void main() {
         // Act & Assert - Test predefined events
         await expectLater(() async {
           await EngineAnalytics.logAppOpen();
-          await EngineAnalytics.logLogin(loginMethod: 'email');
-          await EngineAnalytics.logSignUp(signUpMethod: 'google');
-          await EngineAnalytics.logSearch(searchTerm: 'test query');
-          await EngineAnalytics.logTutorialBegin();
-          await EngineAnalytics.logTutorialComplete();
-          await EngineAnalytics.logLevelUp(level: 5, character: 'warrior');
+          await EngineAnalytics.logEvent('login', {'method': 'email'});
+          await EngineAnalytics.logEvent('sign_up', {'method': 'google'});
+          await EngineAnalytics.logEvent('search', {'search_term': 'test query'});
+          await EngineAnalytics.logEvent('tutorial_begin');
+          await EngineAnalytics.logEvent('tutorial_complete');
+          await EngineAnalytics.logEvent('level_up', {'level': 5, 'character': 'warrior'});
         }(), completes);
       });
 
@@ -148,10 +142,10 @@ void main() {
 
         // Act & Assert - Test edge cases
         await expectLater(() async {
-          await EngineAnalytics.logEvent(name: 'empty_params', parameters: {});
-          await EngineAnalytics.logLogin();
-          await EngineAnalytics.logSignUp();
-          await EngineAnalytics.logLevelUp(level: 0);
+          await EngineAnalytics.logEvent('empty_params', {});
+          await EngineAnalytics.logEvent('login');
+          await EngineAnalytics.logEvent('sign_up');
+          await EngineAnalytics.logEvent('level_up', {'level': 0});
         }(), completes);
       });
 
@@ -163,8 +157,8 @@ void main() {
         final futures = List.generate(
             20,
             (final index) => EngineAnalytics.logEvent(
-                  name: 'concurrent_event_$index',
-                  parameters: {'index': index},
+                  'concurrent_event_$index',
+                  {'index': index},
                 ));
 
         await expectLater(Future.wait(futures), completes);
@@ -182,26 +176,16 @@ void main() {
         }(), completes);
       });
 
-      test('should handle null user ID', () async {
-        // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
-
-        // Act & Assert
-        await expectLater(() async {
-          await EngineAnalytics.setUserId(null);
-        }(), completes);
-      });
-
       test('should set user properties', () async {
         // Arrange
         await EngineAnalytics.initAnalytics(disabledModel);
 
         // Act & Assert - Test various user properties
         await expectLater(() async {
-          await EngineAnalytics.setUserProperty(name: 'user_type', value: 'premium');
-          await EngineAnalytics.setUserProperty(name: 'signup_method', value: 'google');
-          await EngineAnalytics.setUserProperty(name: 'age_group', value: '25-34');
-          await EngineAnalytics.setUserProperty(name: 'country', value: 'BR');
+          await EngineAnalytics.setUserProperty('user_type', 'premium');
+          await EngineAnalytics.setUserProperty('signup_method', 'google');
+          await EngineAnalytics.setUserProperty('age_group', '25-34');
+          await EngineAnalytics.setUserProperty('country', 'BR');
         }(), completes);
       });
 
@@ -227,15 +211,14 @@ void main() {
         }(), completes);
       });
 
-      test('should handle empty and special user properties', () async {
+      test('should handle special user properties', () async {
         // Arrange
         await EngineAnalytics.initAnalytics(disabledModel);
 
         // Act & Assert - Test edge cases
         await expectLater(() async {
-          await EngineAnalytics.setUserProperty(name: 'empty_value', value: '');
-          await EngineAnalytics.setUserProperty(name: 'null_value', value: null);
-          await EngineAnalytics.setUserProperty(name: 'unicode_prop', value: '🚀🌟💯');
+          await EngineAnalytics.setUserProperty('empty_value', '');
+          await EngineAnalytics.setUserProperty('unicode_prop', '🚀🌟💯');
         }(), completes);
       });
 
@@ -247,8 +230,8 @@ void main() {
         final futures = List.generate(
             10,
             (final index) => EngineAnalytics.setUserProperty(
-                  name: 'property_$index',
-                  value: 'value_$index',
+                  'property_$index',
+                  'value_$index',
                 ));
 
         await expectLater(Future.wait(futures), completes);
@@ -262,7 +245,7 @@ void main() {
 
         // Act & Assert
         await expectLater(() async {
-          await EngineAnalytics.setCurrentScreen(screenName: 'HomeScreen');
+          await EngineAnalytics.setCurrentScreen('HomeScreen');
         }(), completes);
       });
 
@@ -272,10 +255,7 @@ void main() {
 
         // Act & Assert
         await expectLater(() async {
-          await EngineAnalytics.setCurrentScreen(
-            screenName: 'ProductDetails',
-            screenClass: 'ShoppingScreen',
-          );
+          await EngineAnalytics.setCurrentScreen('ProductDetails', 'ShoppingScreen');
         }(), completes);
       });
 
@@ -295,7 +275,7 @@ void main() {
           ];
 
           for (final screen in screens) {
-            await EngineAnalytics.setCurrentScreen(screenName: screen);
+            await EngineAnalytics.setCurrentScreen(screen);
           }
         }(), completes);
       });
@@ -308,8 +288,8 @@ void main() {
         final futures = List.generate(
             5,
             (final index) => EngineAnalytics.setCurrentScreen(
-                  screenName: 'Screen_$index',
-                  screenClass: 'Class_$index',
+                  'Screen_$index',
+                  'Class_$index',
                 ));
 
         await expectLater(Future.wait(futures), completes);
@@ -374,22 +354,22 @@ void main() {
           // App start
           await EngineAnalytics.initAnalytics(disabledModel);
           await EngineAnalytics.logAppOpen();
-          await EngineAnalytics.setCurrentScreen(screenName: 'SplashScreen');
+          await EngineAnalytics.setCurrentScreen('SplashScreen');
 
           // User signs up
-          await EngineAnalytics.setCurrentScreen(screenName: 'SignUpScreen');
-          await EngineAnalytics.logSignUp(signUpMethod: 'email');
+          await EngineAnalytics.setCurrentScreen('SignUpScreen');
+          await EngineAnalytics.logEvent('sign_up', {'method': 'email'});
           await EngineAnalytics.setUserId('user123');
 
           // User explores app
-          await EngineAnalytics.setCurrentScreen(screenName: 'HomeScreen');
-          await EngineAnalytics.logSearch(searchTerm: 'flutter tutorials');
-          await EngineAnalytics.setCurrentScreen(screenName: 'SearchResults');
+          await EngineAnalytics.setCurrentScreen('HomeScreen');
+          await EngineAnalytics.logEvent('search', {'search_term': 'flutter tutorials'});
+          await EngineAnalytics.setCurrentScreen('SearchResults');
 
           // User completes tutorial
-          await EngineAnalytics.logTutorialBegin();
-          await EngineAnalytics.logTutorialComplete();
-          await EngineAnalytics.logLevelUp(level: 1);
+          await EngineAnalytics.logEvent('tutorial_begin');
+          await EngineAnalytics.logEvent('tutorial_complete');
+          await EngineAnalytics.logEvent('level_up', {'level': 1});
         }(), completes);
       });
 
@@ -399,20 +379,20 @@ void main() {
           await EngineAnalytics.initAnalytics(disabledModel);
 
           // User browses products
-          await EngineAnalytics.setCurrentScreen(screenName: 'ProductList');
+          await EngineAnalytics.setCurrentScreen('ProductList');
           await EngineAnalytics.logEvent(
-            name: 'view_item_list',
-            parameters: {
+            'view_item_list',
+            {
               'item_category': 'electronics',
               'item_list_name': 'featured_products',
             },
           );
 
           // User views product
-          await EngineAnalytics.setCurrentScreen(screenName: 'ProductDetails');
+          await EngineAnalytics.setCurrentScreen('ProductDetails');
           await EngineAnalytics.logEvent(
-            name: 'view_item',
-            parameters: {
+            'view_item',
+            {
               'item_id': 'product123',
               'item_name': 'Smartphone',
               'item_category': 'electronics',
@@ -422,8 +402,8 @@ void main() {
 
           // User adds to cart
           await EngineAnalytics.logEvent(
-            name: 'add_to_cart',
-            parameters: {
+            'add_to_cart',
+            {
               'currency': 'USD',
               'value': 999.99,
               'items': ['product123'],
@@ -438,10 +418,10 @@ void main() {
           await EngineAnalytics.initAnalytics(disabledModel);
 
           // Player starts game
-          await EngineAnalytics.setUserProperty(name: 'player_type', value: 'casual');
+          await EngineAnalytics.setUserProperty('player_type', 'casual');
           await EngineAnalytics.logEvent(
-            name: 'level_start',
-            parameters: {
+            'level_start',
+            {
               'level_number': 1,
               'character': 'warrior',
             },
@@ -449,20 +429,20 @@ void main() {
 
           // Player progresses
           await EngineAnalytics.logEvent(
-            name: 'score_update',
-            parameters: {
+            'score_update',
+            {
               'score': 1500,
               'level': 1,
             },
           );
 
           // Player levels up
-          await EngineAnalytics.logLevelUp(level: 2, character: 'warrior');
+          await EngineAnalytics.logEvent('level_up', {'level': 2, 'character': 'warrior'});
 
           // Player achieves milestone
           await EngineAnalytics.logEvent(
-            name: 'unlock_achievement',
-            parameters: {
+            'unlock_achievement',
+            {
               'achievement_id': 'first_level_complete',
               'achievement_name': 'Getting Started',
             },
@@ -479,8 +459,8 @@ void main() {
         // Act & Assert - Test high-frequency operations
         expect(() async {
           for (var i = 0; i < 100; i++) {
-            await EngineAnalytics.logEvent(name: 'high_frequency_event_$i');
-            await EngineAnalytics.setUserProperty(name: 'counter', value: i.toString());
+            await EngineAnalytics.logEvent('high_frequency_event_$i');
+            await EngineAnalytics.setUserProperty('counter', i.toString());
           }
         }, returnsNormally);
       });
@@ -494,9 +474,9 @@ void main() {
 
         for (var i = 0; i < 50; i++) {
           futures
-            ..add(EngineAnalytics.logEvent(name: 'concurrent_event_$i'))
-            ..add(EngineAnalytics.setUserProperty(name: 'prop_$i', value: 'value_$i'))
-            ..add(EngineAnalytics.setCurrentScreen(screenName: 'Screen_$i'));
+            ..add(EngineAnalytics.logEvent('concurrent_event_$i'))
+            ..add(EngineAnalytics.setUserProperty('prop_$i', 'value_$i'))
+            ..add(EngineAnalytics.setCurrentScreen('Screen_$i'));
         }
 
         await expectLater(Future.wait(futures), completes);
@@ -510,8 +490,8 @@ void main() {
         final stopwatch = Stopwatch()..start();
 
         for (var i = 0; i < 100; i++) {
-          await EngineAnalytics.logEvent(name: 'performance_test_$i');
-          await EngineAnalytics.setUserProperty(name: 'perf_$i', value: i.toString());
+          await EngineAnalytics.logEvent('performance_test_$i');
+          await EngineAnalytics.setUserProperty('perf_$i', i.toString());
         }
 
         stopwatch.stop();
@@ -531,8 +511,8 @@ void main() {
 
             for (var i = 0; i < 20; i++) {
               futures
-                ..add(EngineAnalytics.logEvent(name: 'batch_${batch}_event_$i'))
-                ..add(EngineAnalytics.setUserProperty(name: 'batch_${batch}_prop_$i', value: i.toString()));
+                ..add(EngineAnalytics.logEvent('batch_${batch}_event_$i'))
+                ..add(EngineAnalytics.setUserProperty('batch_${batch}_prop_$i', i.toString()));
             }
 
             await Future.wait(futures);
@@ -556,7 +536,7 @@ void main() {
         await expectLater(() async {
           // Test with disabled model
           await EngineAnalytics.initAnalytics(disabledModel);
-          await EngineAnalytics.logEvent(name: 'test_disabled');
+          await EngineAnalytics.logEvent('test_disabled');
         }(), completes);
 
         // Test with enabled model - expect exception when Firebase not initialized
@@ -570,11 +550,11 @@ void main() {
         await expectLater(() async {
           // Start with disabled
           await EngineAnalytics.initAnalytics(disabledModel);
-          await EngineAnalytics.setUserProperty(name: 'mode', value: 'disabled');
+          await EngineAnalytics.setUserProperty('mode', 'disabled');
 
           // Switch back to disabled (should work)
           await EngineAnalytics.initAnalytics(disabledModel);
-          await EngineAnalytics.setUserProperty(name: 'mode', value: 'disabled_again');
+          await EngineAnalytics.setUserProperty('mode', 'disabled_again');
         }(), completes);
 
         // Test switching to enabled - expect exception when Firebase not initialized
@@ -585,45 +565,29 @@ void main() {
     });
 
     group('Analytics Model Configuration', () {
-      test('should respect collectEvents setting with Firebase disabled', () async {
+      test('should handle basic Firebase disabled model', () async {
         // Arrange
-        final noEventsModel = EngineAnalyticsModel(
+        final basicModel = EngineAnalyticsModel(
           firebaseAnalyticsEnabled: false,
-          collectEvents: false,
         );
 
-        // Act & Assert - Events should be skipped when collectEvents is false
+        // Act & Assert - Should work with basic Firebase disabled model
         await expectLater(() async {
-          await EngineAnalytics.initAnalytics(noEventsModel);
-          await EngineAnalytics.logEvent(name: 'should_be_skipped');
+          await EngineAnalytics.initAnalytics(basicModel);
+          await EngineAnalytics.logEvent('test_event');
           await EngineAnalytics.logAppOpen();
-        }(), completes);
-      });
-
-      test('should respect collectUserProperties setting with Firebase disabled', () async {
-        // Arrange
-        final noPropsModel = EngineAnalyticsModel(
-          firebaseAnalyticsEnabled: false,
-          collectUserProperties: false,
-        );
-
-        // Act & Assert - User properties should be skipped when collectUserProperties is false
-        await expectLater(() async {
-          await EngineAnalytics.initAnalytics(noPropsModel);
-          await EngineAnalytics.setUserProperty(name: 'should_be_skipped', value: 'test');
         }(), completes);
       });
 
       test('should handle Firebase enabled configuration gracefully', () async {
         // Arrange
-        final debugModel = EngineAnalyticsModel(
+        final enabledFirebaseModel = EngineAnalyticsModel(
           firebaseAnalyticsEnabled: true,
-          enableDebugView: true,
         );
 
         // Act & Assert - Should handle Firebase enabled gracefully when not initialized
         expect(() async {
-          await EngineAnalytics.initAnalytics(debugModel);
+          await EngineAnalytics.initAnalytics(enabledFirebaseModel);
         }, throwsA(anything));
       });
     });

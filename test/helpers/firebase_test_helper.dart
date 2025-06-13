@@ -35,12 +35,7 @@ class FirebaseTestHelper {
 
       test('should work with analytics enabled', () async {
         // Setup model for Analytics enabled
-        final model = EngineAnalyticsModel(
-          firebaseAnalyticsEnabled: true,
-          collectUserProperties: true,
-          collectEvents: true,
-          enableDebugView: false,
-        );
+        final model = EngineAnalyticsModel(firebaseAnalyticsEnabled: true);
 
         await testBody();
       });
@@ -233,16 +228,17 @@ class FirebaseTestHelper {
     final bool collectEvents = true,
     final bool enableDebugView = false,
   }) =>
-      EngineAnalyticsModel(
-        firebaseAnalyticsEnabled: analyticsEnabled,
-        collectUserProperties: collectUserProperties,
-        collectEvents: collectEvents,
-        enableDebugView: enableDebugView,
-      );
+      EngineAnalyticsModel(firebaseAnalyticsEnabled: analyticsEnabled);
 
   /// Creates a custom BugTracking model for tests
   static EngineBugTrackingModel createBugTrackingModel({
     final bool crashlyticsEnabled = true,
   }) =>
       EngineBugTrackingModel(crashlyticsEnabled: crashlyticsEnabled);
+}
+
+// Empty main for test runner compatibility
+void main() {
+  // This file is a helper class, not a test file
+  // Tests using this helper should be in separate files
 }

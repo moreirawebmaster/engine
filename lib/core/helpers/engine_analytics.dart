@@ -8,7 +8,7 @@ class EngineAnalytics {
 
   /// Firebase Analytics instance
   static FirebaseAnalytics? _analytics;
-  static late final EngineAnalyticsModel _engineAnalyticsModel;
+  static late EngineAnalyticsModel _engineAnalyticsModel;
 
   /// Initialize Analytics functionality
   ///
