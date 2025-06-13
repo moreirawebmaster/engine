@@ -19,179 +19,135 @@ class FirebaseTestHelper {
     _initialized = true;
   }
 
-  /// Tests with Firebase Analytics enabled using mocks
-  static Future<void> testWithAnalyticsEnabled({
+  /// Tests EngineAnalytics with Firebase enabled using mocks
+  static Future<void> testAnalyticsWithFirebaseEnabled({
     required final String testName,
-    required final Future<void> Function() testBody,
+    required final Future<void> Function(EngineAnalyticsModel model) testBody,
   }) async {
-    group('Firebase Analytics Enabled - $testName', () {
-      setUp(() {
-        setupFirebaseMocks();
-      });
+    test('$testName - with Firebase Analytics enabled', () async {
+      // Arrange
+      setupFirebaseMocks();
+      final model = EngineAnalyticsModel(firebaseAnalyticsEnabled: true);
 
-      tearDown(() {
-        FirebaseMocks.resetAllMocks();
-      });
+      // Act & Assert
+      await testBody(model);
 
-      test('should work with analytics enabled', () async {
-        // Setup model for Analytics enabled
-        final model = EngineAnalyticsModel(firebaseAnalyticsEnabled: true);
-
-        await testBody();
-      });
+      // Cleanup
+      FirebaseMocks.resetAllMocks();
     });
   }
 
-  /// Tests with Firebase Crashlytics enabled using mocks
-  static Future<void> testWithCrashlyticsEnabled({
+  /// Tests EngineBugTracking with Firebase enabled using mocks
+  static Future<void> testBugTrackingWithFirebaseEnabled({
     required final String testName,
-    required final Future<void> Function() testBody,
+    required final Future<void> Function(EngineBugTrackingModel model) testBody,
   }) async {
-    group('Firebase Crashlytics Enabled - $testName', () {
-      setUp(() {
-        setupFirebaseMocks();
-      });
+    test('$testName - with Firebase Crashlytics enabled', () async {
+      // Arrange
+      setupFirebaseMocks();
+      final model = EngineBugTrackingModel(crashlyticsEnabled: true);
 
-      tearDown(() {
-        FirebaseMocks.resetAllMocks();
-      });
+      // Act & Assert
+      await testBody(model);
 
-      test('should work with crashlytics enabled', () async {
-        // Setup model for Crashlytics enabled
-        final model = EngineBugTrackingModel(crashlyticsEnabled: true);
-
-        await testBody();
-      });
+      // Cleanup
+      FirebaseMocks.resetAllMocks();
     });
   }
 
-  /// Tests Firebase error scenarios
-  static Future<void> testFirebaseErrors({
+  /// Tests Firebase error scenarios with actual error injection
+  static Future<void> testWithFirebaseErrors({
     required final String testName,
     required final Future<void> Function() testBody,
   }) async {
-    group('Firebase Errors - $testName', () {
-      setUp(() {
-        setupFirebaseMocks();
-        FirebaseMocks.setupErrorMocks();
-      });
+    test('$testName - handling Firebase errors', () async {
+      // Arrange
+      setupFirebaseMocks();
+      FirebaseMocks.setupErrorMocks();
 
-      tearDown(() {
-        FirebaseMocks.resetAllMocks();
-      });
+      // Act & Assert - Test should handle errors gracefully
+      await expectLater(testBody, returnsNormally);
 
-      test('should handle Firebase errors gracefully', () async {
-        await testBody();
-      });
+      // Cleanup
+      FirebaseMocks.resetAllMocks();
     });
   }
 
-  /// Verifies if Analytics methods were called correctly
-  static void verifyAnalyticsCalls(
+  /// Verifies Analytics methods were called with correct parameters
+  static void verifyAnalyticsMethodCalls(
     final MockFirebaseAnalytics mock, {
-    final bool? setAnalyticsCollectionEnabled,
-    final bool? logEvent,
-    final bool? setUserId,
-    final bool? setUserProperty,
-    final bool? logScreenView,
-    final bool? logAppOpen,
-    final bool? logLogin,
-    final bool? logSignUp,
-    final bool? logSearch,
-    final bool? logTutorialBegin,
-    final bool? logTutorialComplete,
-    final bool? logLevelUp,
-    final bool? resetAnalyticsData,
-    final bool? setDefaultEventParameters,
+    final int? setAnalyticsCollectionEnabledCount,
+    final int? logEventCount,
+    final int? setUserIdCount,
+    final int? setUserPropertyCount,
+    final int? logScreenViewCount,
+    final int? logAppOpenCount,
+    final int? resetAnalyticsDataCount,
+    final int? setDefaultEventParametersCount,
   }) {
-    if (setAnalyticsCollectionEnabled == true) {
-      verify(mock.setAnalyticsCollectionEnabled(any)).called(greaterThan(0));
+    if (setAnalyticsCollectionEnabledCount != null) {
+      verify(mock.setAnalyticsCollectionEnabled(any)).called(setAnalyticsCollectionEnabledCount);
     }
 
-    if (logEvent == true) {
-      verify(mock.logEvent(name: anyNamed('name'), parameters: anyNamed('parameters'))).called(greaterThan(0));
+    if (logEventCount != null) {
+      verify(mock.logEvent(name: anyNamed('name'), parameters: anyNamed('parameters'))).called(logEventCount);
     }
 
-    if (setUserId == true) {
-      verify(mock.setUserId(id: anyNamed('id'))).called(greaterThan(0));
+    if (setUserIdCount != null) {
+      verify(mock.setUserId(id: anyNamed('id'))).called(setUserIdCount);
     }
 
-    if (setUserProperty == true) {
-      verify(mock.setUserProperty(name: anyNamed('name'), value: anyNamed('value'))).called(greaterThan(0));
+    if (setUserPropertyCount != null) {
+      verify(mock.setUserProperty(name: anyNamed('name'), value: anyNamed('value'))).called(setUserPropertyCount);
     }
 
-    if (logScreenView == true) {
+    if (logScreenViewCount != null) {
       verify(mock.logScreenView(
         screenName: anyNamed('screenName'),
         screenClass: anyNamed('screenClass'),
-      )).called(greaterThan(0));
+      )).called(logScreenViewCount);
     }
 
-    if (logAppOpen == true) {
-      verify(mock.logAppOpen()).called(greaterThan(0));
+    if (logAppOpenCount != null) {
+      verify(mock.logAppOpen()).called(logAppOpenCount);
     }
 
-    if (logLogin == true) {
-      verify(mock.logLogin(loginMethod: anyNamed('loginMethod'))).called(greaterThan(0));
+    if (resetAnalyticsDataCount != null) {
+      verify(mock.resetAnalyticsData()).called(resetAnalyticsDataCount);
     }
 
-    if (logSignUp == true) {
-      verify(mock.logSignUp(signUpMethod: anyNamed('signUpMethod'))).called(greaterThan(0));
-    }
-
-    if (logSearch == true) {
-      verify(mock.logSearch(searchTerm: anyNamed('searchTerm'))).called(greaterThan(0));
-    }
-
-    if (logTutorialBegin == true) {
-      verify(mock.logTutorialBegin()).called(greaterThan(0));
-    }
-
-    if (logTutorialComplete == true) {
-      verify(mock.logTutorialComplete()).called(greaterThan(0));
-    }
-
-    if (logLevelUp == true) {
-      verify(mock.logLevelUp(level: anyNamed('level'), character: anyNamed('character'))).called(greaterThan(0));
-    }
-
-    if (resetAnalyticsData == true) {
-      verify(mock.resetAnalyticsData()).called(greaterThan(0));
-    }
-
-    if (setDefaultEventParameters == true) {
-      verify(mock.setDefaultEventParameters(any)).called(greaterThan(0));
+    if (setDefaultEventParametersCount != null) {
+      verify(mock.setDefaultEventParameters(any)).called(setDefaultEventParametersCount);
     }
   }
 
-  /// Verifies if Crashlytics methods were called correctly
-  static void verifyCrashlyticsCalls(
+  /// Verifies Crashlytics methods were called with correct parameters
+  static void verifyCrashlyticsMethodCalls(
     final MockFirebaseCrashlytics mock, {
-    final bool? setCrashlyticsCollectionEnabled,
-    final bool? setCustomKey,
-    final bool? setUserIdentifier,
-    final bool? testCrash,
-    final bool? log,
-    final bool? recordError,
-    final bool? recordFlutterError,
+    final int? setCrashlyticsCollectionEnabledCount,
+    final int? setCustomKeyCount,
+    final int? setUserIdentifierCount,
+    final int? logCount,
+    final int? recordErrorCount,
+    final int? recordFlutterErrorCount,
   }) {
-    if (setCrashlyticsCollectionEnabled == true) {
-      verify(mock.setCrashlyticsCollectionEnabled(any)).called(greaterThan(0));
+    if (setCrashlyticsCollectionEnabledCount != null) {
+      verify(mock.setCrashlyticsCollectionEnabled(any)).called(setCrashlyticsCollectionEnabledCount);
     }
 
-    if (setCustomKey == true) {
-      verify(mock.setCustomKey(any, any)).called(greaterThan(0));
+    if (setCustomKeyCount != null) {
+      verify(mock.setCustomKey(any, any)).called(setCustomKeyCount);
     }
 
-    if (setUserIdentifier == true) {
-      verify(mock.setUserIdentifier(any)).called(greaterThan(0));
+    if (setUserIdentifierCount != null) {
+      verify(mock.setUserIdentifier(any)).called(setUserIdentifierCount);
     }
 
-    if (log == true) {
-      verify(mock.log(any)).called(greaterThan(0));
+    if (logCount != null) {
+      verify(mock.log(any)).called(logCount);
     }
 
-    if (recordError == true) {
+    if (recordErrorCount != null) {
       verify(mock.recordError(
         any,
         any,
@@ -199,46 +155,161 @@ class FirebaseTestHelper {
         printDetails: anyNamed('printDetails'),
         fatal: anyNamed('fatal'),
         information: anyNamed('information'),
-      )).called(greaterThan(0));
+      )).called(recordErrorCount);
     }
 
-    if (recordFlutterError == true) {
-      verify(mock.recordFlutterError(any)).called(greaterThan(0));
+    if (recordFlutterErrorCount != null) {
+      verify(mock.recordFlutterError(any)).called(recordFlutterErrorCount);
     }
   }
 
-  /// Runs test with mocked Analytics
-  static Future<void> runWithMockedAnalytics(final Function testFunction) async {
-    // For now, we'll run the test normally
-    // In a real scenario, you would replace FirebaseAnalytics.instance here
-    await testFunction();
+  /// Tests Analytics initialization and basic operations
+  static Future<void> testAnalyticsFlow({
+    required final String testName,
+    required final Future<void> Function() operations,
+  }) async {
+    await testAnalyticsWithFirebaseEnabled(
+      testName: testName,
+      testBody: (final model) async {
+        // Initialize Analytics
+        await EngineAnalytics.init(model);
+
+        // Execute test operations
+        await operations();
+      },
+    );
   }
 
-  /// Runs test with mocked Crashlytics
-  static Future<void> runWithMockedCrashlytics(final Function testFunction) async {
-    // For now, we'll run the test normally
-    // In a real scenario, you would replace FirebaseCrashlytics.instance here
-    await testFunction();
+  /// Tests BugTracking initialization and basic operations
+  static Future<void> testBugTrackingFlow({
+    required final String testName,
+    required final Future<void> Function() operations,
+  }) async {
+    await testBugTrackingWithFirebaseEnabled(
+      testName: testName,
+      testBody: (final model) async {
+        // Initialize BugTracking
+        await EngineBugTracking.init(model);
+
+        // Execute test operations
+        await operations();
+      },
+    );
   }
 
-  /// Creates a custom Analytics model for tests
-  static EngineAnalyticsModel createAnalyticsModel({
-    final bool analyticsEnabled = true,
-    final bool collectUserProperties = true,
-    final bool collectEvents = true,
-    final bool enableDebugView = false,
-  }) =>
-      EngineAnalyticsModel(firebaseAnalyticsEnabled: analyticsEnabled);
+  /// Validates Analytics disabled behavior
+  static Future<void> testAnalyticsDisabled({
+    required final String testName,
+    required final Future<void> Function() operations,
+  }) async {
+    test('$testName - with Firebase Analytics disabled', () async {
+      // Arrange
+      final model = EngineAnalyticsModel(firebaseAnalyticsEnabled: false);
+      await EngineAnalytics.init(model);
 
-  /// Creates a custom BugTracking model for tests
-  static EngineBugTrackingModel createBugTrackingModel({
-    final bool crashlyticsEnabled = true,
-  }) =>
-      EngineBugTrackingModel(crashlyticsEnabled: crashlyticsEnabled);
+      // Act & Assert - Should complete without Firebase calls
+      await expectLater(operations, returnsNormally);
+    });
+  }
+
+  /// Validates BugTracking disabled behavior
+  static Future<void> testBugTrackingDisabled({
+    required final String testName,
+    required final Future<void> Function() operations,
+  }) async {
+    test('$testName - with Firebase Crashlytics disabled', () async {
+      // Arrange
+      final model = EngineBugTrackingModel(crashlyticsEnabled: false);
+      await EngineBugTracking.init(model);
+
+      // Act & Assert - Should complete without Firebase calls
+      await expectLater(operations, returnsNormally);
+    });
+  }
+
+  /// Creates Analytics model for unit tests
+  static EngineAnalyticsModel createAnalyticsModel([final bool enabled = true]) => EngineAnalyticsModel(firebaseAnalyticsEnabled: enabled);
+
+  /// Creates BugTracking model for unit tests
+  static EngineBugTrackingModel createBugTrackingModel([final bool enabled = true]) => EngineBugTrackingModel(crashlyticsEnabled: enabled);
+
+  /// Comprehensive Analytics test suite
+  static void runAnalyticsTestSuite() {
+    group('Firebase Analytics Integration Tests', () async {
+      await testAnalyticsFlow(
+        testName: 'Basic Analytics Operations',
+        operations: () async {
+          await EngineAnalytics.logEvent('test_event', {'param': 'value'});
+          await EngineAnalytics.setUserId('test_user_123');
+          await EngineAnalytics.setUserProperty('user_type', 'tester');
+          await EngineAnalytics.setCurrentScreen('TestScreen', 'TestClass');
+          await EngineAnalytics.logAppOpen();
+        },
+      );
+
+      await testAnalyticsDisabled(
+        testName: 'Analytics Operations with Firebase Disabled',
+        operations: () async {
+          await EngineAnalytics.logEvent('test_event');
+          await EngineAnalytics.setUserId('test_user');
+          await EngineAnalytics.setUserProperty('prop', 'value');
+        },
+      );
+
+      await testWithFirebaseErrors(
+        testName: 'Analytics Error Handling',
+        testBody: () async {
+          final model = createAnalyticsModel();
+          await EngineAnalytics.init(model);
+          await EngineAnalytics.logEvent('error_test');
+        },
+      );
+    });
+  }
+
+  /// Comprehensive BugTracking test suite
+  static void runBugTrackingTestSuite() {
+    group('Firebase Crashlytics Integration Tests', () async {
+      await testBugTrackingFlow(
+        testName: 'Basic BugTracking Operations',
+        operations: () async {
+          await EngineBugTracking.setCustomKey('test_key', 'test_value');
+          await EngineBugTracking.setUserIdentifier('test_user_123');
+          await EngineBugTracking.log('Test log message');
+          await EngineBugTracking.recordError(
+            Exception('Test exception'),
+            StackTrace.current,
+            reason: 'Unit test',
+            isFatal: false,
+          );
+        },
+      );
+
+      await testBugTrackingDisabled(
+        testName: 'BugTracking Operations with Firebase Disabled',
+        operations: () async {
+          await EngineBugTracking.setCustomKey('key', 'value');
+          await EngineBugTracking.setUserIdentifier('user');
+          await EngineBugTracking.log('Log message');
+        },
+      );
+
+      await testWithFirebaseErrors(
+        testName: 'BugTracking Error Handling',
+        testBody: () async {
+          final model = createBugTrackingModel();
+          await EngineBugTracking.init(model);
+          await EngineBugTracking.log('Error test log');
+        },
+      );
+    });
+  }
 }
 
 // Empty main for test runner compatibility
 void main() {
   // This file is a helper class, not a test file
-  // Tests using this helper should be in separate files
+  // Run the test suites in actual test files:
+  // FirebaseTestHelper.runAnalyticsTestSuite();
+  // FirebaseTestHelper.runBugTrackingTestSuite();
 }

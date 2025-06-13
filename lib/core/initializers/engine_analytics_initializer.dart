@@ -19,7 +19,7 @@ class EngineAnalyticsInitializer implements IEngineBaseInitializer<EngineAnalyti
     }
 
     try {
-      await EngineAnalytics.initAnalytics(params!);
+      await EngineAnalytics.init(params!);
     } catch (e, stack) {
       EngineLog.error('Failed to initialize Analytics: ${e.toString()}', error: e, stackTrace: stack);
     }

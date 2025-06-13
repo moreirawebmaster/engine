@@ -13,13 +13,13 @@ void main() {
       test('should initialize analytics with Firebase disabled', () async {
         // Act & Assert
         await expectLater(() async {
-          await EngineAnalytics.initAnalytics(disabledModel);
+          await EngineAnalytics.init(disabledModel);
         }(), completes);
       });
 
       test('should log custom events with Firebase disabled', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
 
         // Act & Assert - Should complete without errors even though Firebase is disabled
         await expectLater(() async {
@@ -29,7 +29,7 @@ void main() {
 
       test('should set user ID with Firebase disabled', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
 
         // Act & Assert
         await expectLater(() async {
@@ -39,7 +39,7 @@ void main() {
 
       test('should set user properties with Firebase disabled', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
 
         // Act & Assert
         await expectLater(() async {
@@ -49,7 +49,7 @@ void main() {
 
       test('should track screen views with Firebase disabled', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
 
         // Act & Assert
         await expectLater(() async {
@@ -59,7 +59,7 @@ void main() {
 
       test('should log predefined events with Firebase disabled', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
 
         // Act & Assert
         await expectLater(() async {
@@ -72,7 +72,7 @@ void main() {
 
       test('should log tutorial events with Firebase disabled', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
 
         // Act & Assert
         await expectLater(() async {
@@ -84,7 +84,7 @@ void main() {
 
       test('should reset analytics data with Firebase disabled', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
 
         // Act & Assert
         await expectLater(() async {
@@ -94,7 +94,7 @@ void main() {
 
       test('should set default event parameters with Firebase disabled', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
         final defaultParams = {
           'app_version': '1.0.0',
           'platform': 'flutter',
@@ -110,7 +110,7 @@ void main() {
     group('Real World Scenarios with Firebase Disabled', () {
       test('should handle complete user journey with Firebase disabled', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
 
         // Act & Assert - Simulate complete user journey
         await expectLater(() async {
@@ -126,7 +126,7 @@ void main() {
 
       test('should handle e-commerce events with Firebase disabled', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
 
         // Act & Assert - Simulate e-commerce events
         await expectLater(() async {
@@ -147,7 +147,7 @@ void main() {
 
       test('should handle concurrent analytics operations with Firebase disabled', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
 
         // Act - Execute concurrent operations
         final futures = [
@@ -165,7 +165,7 @@ void main() {
 
       test('should handle high-frequency operations with Firebase disabled', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
 
         // Act & Assert - Test high-frequency operations
         await expectLater(() async {
@@ -184,7 +184,7 @@ void main() {
 
         // Act & Assert
         await expectLater(() async {
-          await EngineAnalytics.initAnalytics(basicModel);
+          await EngineAnalytics.init(basicModel);
           await EngineAnalytics.logEvent('basic_test');
           await EngineAnalytics.setUserId('basic_user');
         }(), completes);
@@ -192,7 +192,7 @@ void main() {
 
       test('should maintain state between operations', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
 
         // Act & Assert - Test that state is maintained
         await expectLater(() async {
@@ -206,16 +206,16 @@ void main() {
       test('should handle model reinitialization', () async {
         // Act & Assert - Reinitializations should work
         await expectLater(() async {
-          await EngineAnalytics.initAnalytics(disabledModel);
+          await EngineAnalytics.init(disabledModel);
           await EngineAnalytics.logEvent('after_first_init');
 
           // Reinitialize with same model
-          await EngineAnalytics.initAnalytics(disabledModel);
+          await EngineAnalytics.init(disabledModel);
           await EngineAnalytics.logEvent('after_second_init');
 
           // Initialize with another disabled model
           final anotherModel = EngineAnalyticsModel(firebaseAnalyticsEnabled: false);
-          await EngineAnalytics.initAnalytics(anotherModel);
+          await EngineAnalytics.init(anotherModel);
           await EngineAnalytics.logEvent('after_third_init');
         }(), completes);
       });
@@ -224,7 +224,7 @@ void main() {
     group('Edge Cases and Error Handling', () {
       test('should handle empty and special values with Firebase disabled', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
 
         // Act & Assert
         await expectLater(() async {
@@ -239,7 +239,7 @@ void main() {
 
       test('should handle special characters in event names and parameters', () async {
         // Arrange
-        await EngineAnalytics.initAnalytics(disabledModel);
+        await EngineAnalytics.init(disabledModel);
 
         // Act & Assert
         await expectLater(() async {

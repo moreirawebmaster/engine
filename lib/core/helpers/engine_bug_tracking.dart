@@ -23,7 +23,7 @@ class EngineBugTracking {
   /// Initialize crash reporting functionality
   ///
   /// [engineBugTrackingModel] is the model that contains the configuration for the bug tracking
-  static Future<void> initCrashReporting(final EngineBugTrackingModel engineBugTrackingModel) async {
+  static Future<void> init(final EngineBugTrackingModel engineBugTrackingModel) async {
     _engineBugTrackingModel = engineBugTrackingModel;
 
     if (_engineBugTrackingModel?.crashlyticsEnabled == true) {

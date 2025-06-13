@@ -13,7 +13,7 @@ class EngineAnalytics {
   /// Initialize Analytics functionality
   ///
   /// [engineAnalyticsModel] is the model that contains the configuration for the analytics
-  static Future<void> initAnalytics(final EngineAnalyticsModel engineAnalyticsModel) async {
+  static Future<void> init(final EngineAnalyticsModel engineAnalyticsModel) async {
     _engineAnalyticsModel = engineAnalyticsModel;
 
     if (_engineAnalyticsModel.firebaseAnalyticsEnabled) {

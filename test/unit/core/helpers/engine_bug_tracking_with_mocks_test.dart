@@ -25,10 +25,10 @@ void main() {
 
       test('should initialize crash reporting with Firebase enabled', () async {
         // Arrange
-        final model = FirebaseTestHelper.createBugTrackingModel(crashlyticsEnabled: true);
+        final model = FirebaseTestHelper.createBugTrackingModel(true);
 
         // Act
-        await EngineBugTracking.initCrashReporting(model);
+        await EngineBugTracking.init(model);
 
         // Assert - Verify if mock methods were called
         verify(FirebaseMocks.crashlytics.setCrashlyticsCollectionEnabled(true)).called(1);
@@ -36,7 +36,7 @@ void main() {
 
       test('should set custom keys with Firebase enabled', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(enabledModel);
+        await EngineBugTracking.init(enabledModel);
 
         // Act
         await EngineBugTracking.setCustomKey('test_key', 'test_value');
@@ -47,7 +47,7 @@ void main() {
 
       test('should set user identifier with Firebase enabled', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(enabledModel);
+        await EngineBugTracking.init(enabledModel);
         const testUserId = 'user123';
 
         // Act
@@ -59,7 +59,7 @@ void main() {
 
       test('should log messages with Firebase enabled', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(enabledModel);
+        await EngineBugTracking.init(enabledModel);
         const testMessage = 'Test log message';
 
         // Act
@@ -71,7 +71,7 @@ void main() {
 
       test('should record errors with Firebase enabled', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(enabledModel);
+        await EngineBugTracking.init(enabledModel);
         final testException = Exception('Test error');
         final testStackTrace = StackTrace.current;
 
@@ -96,7 +96,7 @@ void main() {
 
       test('should record Flutter errors with Firebase enabled', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(enabledModel);
+        await EngineBugTracking.init(enabledModel);
         final testFlutterError = FlutterErrorDetails(
           exception: Exception('Test Flutter error'),
           stack: StackTrace.current,
@@ -112,7 +112,7 @@ void main() {
 
       test('should handle test crash with Firebase enabled', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(enabledModel);
+        await EngineBugTracking.init(enabledModel);
 
         // Act
         await EngineBugTracking.testCrash();
@@ -123,7 +123,7 @@ void main() {
 
       test('should handle multiple custom keys with Firebase enabled', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(enabledModel);
+        await EngineBugTracking.init(enabledModel);
 
         // Act
         await EngineBugTracking.setCustomKey('user_id', 'user123');
@@ -140,7 +140,7 @@ void main() {
 
       test('should handle different error types with Firebase enabled', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(enabledModel);
+        await EngineBugTracking.init(enabledModel);
         final networkError = Exception('Network connection failed');
         const parseError = FormatException('Invalid JSON format');
         final stateError = StateError('Invalid state');
@@ -182,7 +182,7 @@ void main() {
       test('should respect crashlyticsEnabled false configuration', () async {
         // Arrange
         final disabledModel = EngineBugTrackingModel(crashlyticsEnabled: false);
-        await EngineBugTracking.initCrashReporting(disabledModel);
+        await EngineBugTracking.init(disabledModel);
 
         // Act
         await EngineBugTracking.setCustomKey('should_not_be_set', 'test');
@@ -207,14 +207,14 @@ void main() {
       test('should handle Firebase Crashlytics initialization errors gracefully', () async {
         // Act & Assert - Should handle error during initialization
         expect(() async {
-          await EngineBugTracking.initCrashReporting(enabledModel);
+          await EngineBugTracking.init(enabledModel);
         }, throwsA(isA<Exception>()));
       });
 
       test('should handle Firebase Crashlytics method errors gracefully', () async {
         // Arrange - Force error during initialization
         try {
-          await EngineBugTracking.initCrashReporting(enabledModel);
+          await EngineBugTracking.init(enabledModel);
         } catch (e) {
           // Esperado
         }
@@ -237,7 +237,7 @@ void main() {
 
       test('should handle complete error tracking flow with Firebase enabled', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(enabledModel);
+        await EngineBugTracking.init(enabledModel);
 
         // Act - Simulate complete error tracking flow
         await EngineBugTracking.setUserIdentifier('user123');
@@ -271,7 +271,7 @@ void main() {
 
       test('should handle multiple concurrent error reports with Firebase enabled', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(enabledModel);
+        await EngineBugTracking.init(enabledModel);
 
         // Act - Execute concurrent operations
         final futures = [
@@ -320,7 +320,7 @@ void main() {
 
       test('should handle session tracking with Firebase enabled', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(enabledModel);
+        await EngineBugTracking.init(enabledModel);
         const sessionId = 'session_abc123';
         const userId = 'user456';
 
