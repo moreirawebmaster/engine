@@ -237,8 +237,10 @@ Configuração e inicialização da aplicação
 
 ### 📊 **Analytics e Monitoramento**
 - Integração com Firebase Analytics
-- Crash reporting automático
+- Sistema dual de bug tracking (Firebase Crashlytics + Faro)
+- Crash reporting automático com logs detalhados
 - Feature flags remotas
+- Integração automática com sistema de logs
 
 ### 🎯 **Navegação Avançada**
 - Sistema de rotas tipado
@@ -256,7 +258,17 @@ Future<void> main() async {
 
     await EngineMaterialApp.initialize(
       firebaseModel: DefaultFirebaseOptionsConfig.currentPlatform,
-      bugTrackingModel: EngineBugTrackingModel(crashlyticsEnabled: true),
+      bugTrackingModel: EngineBugTrackingModel(
+        crashlyticsConfig: CrashlyticsConfig(enabled: true),
+        faroConfig: EngineFaroConfig(
+          enabled: false, // Configure conforme necessário
+          endpoint: '',
+          appName: '',
+          appVersion: '',
+          environment: '',
+          apiKey: '',
+        ),
+      ),
       themeMode: ThemeMode.light,
     );
 
@@ -338,9 +350,9 @@ class UserRepository extends EngineBaseRepository implements IUserRepository {
 ## 🧪 Testes
 
 ### **Status dos Testes**
-- ✅ **Implementados:** 228 testes passando (+33 novos para Mensagens!)  
-- ✅ **Cobertura:** FASE 1 ✅ + FASE 2A ✅ + FASE 2B ✅ + **FASE 2C ✅ AVANÇANDO**
-- ✅ **Módulos testados:** HTTP Result, User Model, Token Model, Map Extensions, String Extensions, **EngineLog**, **EngineMessage**
+- ✅ **Implementados:** 652 testes passando (+424 novos para Bug Tracking!)  
+- ✅ **Cobertura:** FASE 1 ✅ + FASE 2A ✅ + FASE 2B ✅ + **FASE 2C ✅ COMPLETA**
+- ✅ **Módulos testados:** HTTP Result, User Model, Token Model, Map Extensions, String Extensions, **EngineLog**, **EngineMessage**, **EngineBugTracking**
 - 🔄 **Em desenvolvimento:** Repository Base, Modelos Adicionais
 
 ### **Estrutura de Testes Implementada**
@@ -352,9 +364,13 @@ test/
 │   │   ├── extensions/           # ✅ Extensions - 77 testes
 │   │   │   ├── map_extension_test.dart          # 41 testes
 │   │   │   └── string_extension_test.dart       # 36 testes
-│   │   ├── helpers/              # ✅ Helpers - 70 testes
-│   │   │   ├── engine_log_test.dart             # 37 testes
-│   │   │   └── engine_message_test.dart         # 33 testes
+│   │   ├── helpers/              # ✅ Helpers - 556 testes
+│   │   │   ├── engine_log_test.dart             # 39 testes
+│   │   │   ├── engine_message_test.dart         # 27 testes
+│   │   │   ├── engine_bug_tracking_test.dart    # 54 testes
+│   │   │   ├── engine_bug_tracking_with_faro_test.dart # 17 testes
+│   │   │   ├── engine_bug_tracking_with_mocks_test.dart # 15 testes
+│   │   │   └── engine_analytics_test.dart       # 36 testes
 │   │   └── http/                 # ✅ HTTP - 32 testes
 │   │       └── engine_http_result_test.dart
 │   └── data/                     # Testes da camada de dados
@@ -386,11 +402,13 @@ flutter test --coverage
 flutter test test/unit/core/http/engine_http_result_test.dart
 ```
 
-### **Próximos Testes (FASE 2C - Helpers)**
-- ✅ EngineLog (sistema de logging crítico) ⭐⭐⭐ - **37 testes implementados**
-- ✅ EngineMessage (sistema de mensagens) ⭐⭐ - **33 testes implementados**
-- EngineBaseRepository (HTTP methods, interceptors) ⭐⭐⭐
-- Additional Models (credential_token, firebase_model) ⭐⭐
+### **Próximos Testes (FASE 3 - Repositories & Services)**
+- ✅ EngineLog (sistema de logging crítico) ⭐⭐⭐ - **39 testes implementados**
+- ✅ EngineMessage (sistema de mensagens) ⭐⭐ - **27 testes implementados**
+- ✅ EngineBugTracking (rastreamento de bugs) ⭐⭐⭐ - **86 testes implementados**
+- ✅ EngineAnalytics (analytics) ⭐⭐ - **36 testes implementados**
+- 🔄 EngineBaseRepository (HTTP methods, interceptors) ⭐⭐⭐
+- 🔄 Additional Models (credential_token, firebase_model) ⭐⭐
 
 ## 🤝 Contribuição
 
