@@ -1,5 +1,5 @@
+import 'package:engine/lib.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:engine/engine.dart';
 
 void main() {
   const header = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';
