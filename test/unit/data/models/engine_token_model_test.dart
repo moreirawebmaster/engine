@@ -308,7 +308,7 @@ void main() {
         // Act & Assert
         expect(token.accessToken, contains('  ')); // Whitespace should be preserved
         expect(token.refreshToken, contains('  '));
-        // Note: Token é ainda válido se o JWT dentro dos espaços for válido
+        // Note: Token is still valid if the JWT within the spaces is valid
         expect(token.isValid, isTrue); // Changed expectation
       });
     });

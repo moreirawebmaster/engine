@@ -291,7 +291,7 @@ class EngineMaterialApp extends StatelessWidget {
 
       await EngineInitializer(initializers: [
         EngineFirebaseInitializer(firebaseModel),
-        EngineBugTrackingInicializer(bugTrackingModel),
+        EngineBugTrackingInitializer(bugTrackingModel),
         EngineFeatureFlagInitializer([], 2),
       ]).init();
 

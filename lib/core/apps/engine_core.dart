@@ -25,4 +25,9 @@ class EngineCore {
   FocusNode? get focusScope => Get.focusScope;
 
   void forceAppUpdate() => Get.forceAppUpdate();
+
+  void reset() => Get.reset();
+
+  bool get testMode => Get.testMode;
+  set testMode(final bool value) => Get.testMode = value;
 }

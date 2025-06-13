@@ -4,12 +4,12 @@ import 'package:flutter_test/flutter_test.dart';
 
 Future<void> testExecutable(final FutureOr<void> Function() testMain) async {
   setUpAll(() async {
-    // Configuração global para todos os testes
+    // Global setup for all tests
     TestWidgetsFlutterBinding.ensureInitialized();
   });
 
   tearDownAll(() async {
-    // Limpeza global após todos os testes
+    // Global cleanup after all tests
   });
 
   await testMain();

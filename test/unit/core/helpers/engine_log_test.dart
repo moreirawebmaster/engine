@@ -33,7 +33,7 @@ class MockDeveloperLog {
 void main() {
   group('EngineLog', () {
     setUp(() {
-      TestUtils.setupGetxForTesting();
+      TestUtils.setupGetx();
       MockDeveloperLog.reset();
     });
 

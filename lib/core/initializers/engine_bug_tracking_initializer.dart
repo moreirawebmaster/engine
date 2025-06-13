@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:engine/lib.dart';
 
-class EngineBugTrackingInicializer implements IEngineBaseInitializer<EngineBugTrackingModel> {
-  EngineBugTrackingInicializer(this.params);
+class EngineBugTrackingInitializer implements IEngineBaseInitializer<EngineBugTrackingModel> {
+  EngineBugTrackingInitializer(this.params);
 
   @override
   final EngineBugTrackingModel? params;
@@ -14,7 +14,7 @@ class EngineBugTrackingInicializer implements IEngineBaseInitializer<EngineBugTr
   @override
   FutureOr<void> onInit() async {
     if (params == null) {
-      EngineLog.error('BugTrackingInicializer: params is null or not EngineBugTrackingModel');
+      EngineLog.error('BugTrackingInitializer: params is null or not EngineBugTrackingModel');
       return;
     }
 
