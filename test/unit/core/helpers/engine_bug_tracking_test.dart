@@ -4,6 +4,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('EngineBugTracking', () {
+    late EngineBugTrackingModel disabledModel;
+    late EngineBugTrackingModel enabledModel;
+
+    setUpAll(() {
+      disabledModel = EngineBugTrackingModel(crashlyticsEnabled: false);
+      enabledModel = EngineBugTrackingModel(crashlyticsEnabled: true);
+    });
+
     group('Class Structure and Initialization', () {
       test('should have EngineBugTracking class available', () {
         // Act & Assert - Class should be accessible
@@ -37,7 +45,7 @@ void main() {
         // Act & Assert - Test method availability for chaining
         expect(() async {
           // All methods should be callable in sequence
-          await EngineBugTracking.initCrashReporting(false);
+          await EngineBugTracking.initCrashReporting(disabledModel);
           await EngineBugTracking.setCustomKey('test', 'value');
           await EngineBugTracking.setUserIdentifier('test_user');
           await EngineBugTracking.log('Test message');
@@ -49,16 +57,16 @@ void main() {
       test('should initialize crash reporting with Firebase disabled', () async {
         // Act & Assert - Should complete without errors
         await expectLater(() async {
-          await EngineBugTracking.initCrashReporting(false);
+          await EngineBugTracking.initCrashReporting(disabledModel);
         }(), completes);
       });
 
       test('should handle Firebase disabled initialization repeatedly', () async {
         // Act & Assert - Should handle repeated initialization with Firebase disabled
         await expectLater(() async {
-          await EngineBugTracking.initCrashReporting(false);
-          await EngineBugTracking.initCrashReporting(false);
-          await EngineBugTracking.initCrashReporting(false);
+          await EngineBugTracking.initCrashReporting(disabledModel);
+          await EngineBugTracking.initCrashReporting(disabledModel);
+          await EngineBugTracking.initCrashReporting(disabledModel);
         }(), completes);
       });
 
@@ -66,7 +74,7 @@ void main() {
         // Act & Assert - Test state with Firebase disabled
         await expectLater(() async {
           // Disable Firebase
-          await EngineBugTracking.initCrashReporting(false);
+          await EngineBugTracking.initCrashReporting(disabledModel);
 
           // Should work without Firebase
           await EngineBugTracking.log('Test without Firebase');
@@ -77,7 +85,7 @@ void main() {
 
       test('should handle concurrent initialization with Firebase disabled', () async {
         // Act & Assert - Test concurrent initialization with Firebase disabled
-        final futures = List.generate(10, (final index) => EngineBugTracking.initCrashReporting(false));
+        final futures = List.generate(10, (final index) => EngineBugTracking.initCrashReporting(disabledModel));
 
         await expectLater(Future.wait(futures), completes);
       });
@@ -86,7 +94,7 @@ void main() {
     group('Custom Key Management', () {
       test('should set custom key with string value', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert
         await expectLater(() async {
@@ -96,7 +104,7 @@ void main() {
 
       test('should set custom key with various data types', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test various data types
         await expectLater(() async {
@@ -111,7 +119,7 @@ void main() {
 
       test('should handle empty and special values', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test edge cases
         await expectLater(() async {
@@ -124,7 +132,7 @@ void main() {
 
       test('should handle long and complex keys', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test complex scenarios
         await expectLater(() async {
@@ -146,7 +154,7 @@ void main() {
 
       test('should handle concurrent custom key operations', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test concurrent operations
         final futures = List.generate(20, (final index) => EngineBugTracking.setCustomKey('key_$index', 'value_$index'));
@@ -158,7 +166,7 @@ void main() {
     group('User Identifier Management', () {
       test('should set user identifier with string value', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert
         await expectLater(() async {
@@ -168,7 +176,7 @@ void main() {
 
       test('should handle various identifier formats', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test various identifier formats
         await expectLater(() async {
@@ -190,7 +198,7 @@ void main() {
 
       test('should handle empty and special identifiers', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test edge cases
         await expectLater(() async {
@@ -202,7 +210,7 @@ void main() {
 
       test('should handle long identifiers', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test long identifiers
         await expectLater(() async {
@@ -213,7 +221,7 @@ void main() {
 
       test('should handle concurrent identifier updates', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test concurrent updates
         final futures = List.generate(10, (final index) => EngineBugTracking.setUserIdentifier('user_$index'));
@@ -225,7 +233,7 @@ void main() {
     group('Test Crash Functionality', () {
       test('should handle test crash call in debug mode', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Should complete without throwing
         expect(() async {
@@ -235,7 +243,7 @@ void main() {
 
       test('should handle test crash with Firebase disabled', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Should handle gracefully
         expect(() async {
@@ -245,7 +253,7 @@ void main() {
 
       test('should handle multiple test crash calls', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Should handle multiple calls
         expect(() async {
@@ -258,7 +266,7 @@ void main() {
       test('should handle test crash in debug mode only', () async {
         // Act & Assert - Test in current debug state
         expect(() async {
-          await EngineBugTracking.initCrashReporting(false);
+          await EngineBugTracking.initCrashReporting(disabledModel);
           await EngineBugTracking.testCrash();
         }, returnsNormally);
       });
@@ -267,7 +275,7 @@ void main() {
     group('Logging Functionality', () {
       test('should log simple messages', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert
         await expectLater(() async {
@@ -277,7 +285,7 @@ void main() {
 
       test('should log various message types', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test various message types
         await expectLater(() async {
@@ -300,7 +308,7 @@ void main() {
 
       test('should handle long log messages', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test long messages
         await expectLater(() async {
@@ -311,7 +319,7 @@ void main() {
 
       test('should handle concurrent logging', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test concurrent logging
         final futures = List.generate(50, (final index) => EngineBugTracking.log('Concurrent log message $index'));
@@ -323,7 +331,7 @@ void main() {
         // Act & Assert - Test with Firebase disabled
         await expectLater(() async {
           // Firebase disabled
-          await EngineBugTracking.initCrashReporting(false);
+          await EngineBugTracking.initCrashReporting(disabledModel);
           await EngineBugTracking.log('Log without Firebase');
         }(), completes);
       });
@@ -332,7 +340,7 @@ void main() {
     group('Error Recording Functionality', () {
       test('should record basic errors', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
         final error = Exception('Test error');
         final stackTrace = StackTrace.current;
 
@@ -344,7 +352,7 @@ void main() {
 
       test('should record errors with all parameters', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
         final error = Exception('Comprehensive error');
         final stackTrace = StackTrace.current;
 
@@ -366,7 +374,7 @@ void main() {
 
       test('should record various error types', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test various error types
         await expectLater(() async {
@@ -390,7 +398,7 @@ void main() {
 
       test('should handle fatal and non-fatal errors', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test fatal and non-fatal errors
         await expectLater(() async {
@@ -414,7 +422,7 @@ void main() {
 
       test('should handle errors with complex data', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test complex data scenarios
         await expectLater(() async {
@@ -447,7 +455,7 @@ void main() {
 
       test('should handle concurrent error recording', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test concurrent error recording
         final futures = List.generate(
@@ -466,7 +474,7 @@ void main() {
     group('Flutter Error Recording', () {
       test('should record Flutter error details', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
         final errorDetails = FlutterErrorDetails(
           exception: Exception('Flutter error'),
           stack: StackTrace.current,
@@ -482,7 +490,7 @@ void main() {
 
       test('should handle Flutter errors with various details', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test various Flutter error scenarios
         await expectLater(() async {
@@ -515,7 +523,7 @@ void main() {
 
       test('should handle Flutter errors with minimal details', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
         final minimalError = FlutterErrorDetails(
           exception: Exception('Minimal error'),
         );
@@ -528,7 +536,7 @@ void main() {
 
       test('should handle concurrent Flutter error recording', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test concurrent Flutter error recording
         final futures = List.generate(
@@ -551,7 +559,7 @@ void main() {
         // Act & Assert - Test session tracking scenario
         await expectLater(() async {
           // Session start
-          await EngineBugTracking.initCrashReporting(false);
+          await EngineBugTracking.initCrashReporting(disabledModel);
           await EngineBugTracking.setUserIdentifier('session_user_123');
           await EngineBugTracking.setCustomKey('session_start', DateTime.now().toIso8601String());
           await EngineBugTracking.log('User session started');
@@ -584,7 +592,7 @@ void main() {
       test('should handle feature flag tracking', () async {
         // Act & Assert - Test feature flag scenario
         await expectLater(() async {
-          await EngineBugTracking.initCrashReporting(false);
+          await EngineBugTracking.initCrashReporting(disabledModel);
 
           // Set feature flags
           await EngineBugTracking.setCustomKey('feature_new_ui', true);
@@ -611,7 +619,7 @@ void main() {
       test('should handle A/B testing tracking', () async {
         // Act & Assert - Test A/B testing scenario
         await expectLater(() async {
-          await EngineBugTracking.initCrashReporting(false);
+          await EngineBugTracking.initCrashReporting(disabledModel);
 
           // Set A/B test variants
           await EngineBugTracking.setCustomKey('ab_test_checkout', 'variant_b');
@@ -639,7 +647,7 @@ void main() {
       test('should handle performance monitoring integration', () async {
         // Act & Assert - Test performance monitoring scenario
         await expectLater(() async {
-          await EngineBugTracking.initCrashReporting(false);
+          await EngineBugTracking.initCrashReporting(disabledModel);
 
           // Set performance baselines
           await EngineBugTracking.setCustomKey('app_launch_time', 2.5);
@@ -669,7 +677,7 @@ void main() {
     group('Performance and Memory Management', () {
       test('should handle high-frequency operations efficiently', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test high-frequency operations
         expect(() async {
@@ -682,7 +690,7 @@ void main() {
 
       test('should handle concurrent operations efficiently', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test concurrent operations
         final futures = <Future>[];
@@ -703,7 +711,7 @@ void main() {
 
       test('should handle large data volumes efficiently', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test large data handling
         expect(() async {
@@ -722,7 +730,7 @@ void main() {
 
       test('should maintain consistent performance', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test performance consistency
         final stopwatch = Stopwatch()..start();
@@ -740,7 +748,7 @@ void main() {
 
       test('should handle memory efficiency with repeated operations', () async {
         // Arrange
-        await EngineBugTracking.initCrashReporting(false);
+        await EngineBugTracking.initCrashReporting(disabledModel);
 
         // Act & Assert - Test memory efficiency
         expect(() async {
@@ -758,6 +766,47 @@ void main() {
             // Operations should complete without memory issues
           }
         }, returnsNormally);
+      });
+    });
+
+    group('Firebase Enabled vs Disabled', () {
+      test('should handle initialization with Firebase enabled gracefully', () async {
+        // Act & Assert - Should handle Firebase not being initialized gracefully
+        expect(() async {
+          await EngineBugTracking.initCrashReporting(enabledModel);
+        }, throwsA(anything));
+      });
+
+      test('should work with different model configurations', () async {
+        // Act & Assert - Test different configurations
+        await expectLater(() async {
+          // Test with disabled model
+          await EngineBugTracking.initCrashReporting(disabledModel);
+          await EngineBugTracking.log('Test with disabled Firebase');
+        }(), completes);
+
+        // Test with enabled model - expect exception when Firebase not initialized
+        expect(() async {
+          await EngineBugTracking.initCrashReporting(enabledModel);
+        }, throwsA(anything));
+      });
+
+      test('should handle model switching between disabled and enabled', () async {
+        // Act & Assert - Test switching between different models
+        await expectLater(() async {
+          // Start with disabled
+          await EngineBugTracking.initCrashReporting(disabledModel);
+          await EngineBugTracking.setCustomKey('mode', 'disabled');
+
+          // Switch back to disabled (should work)
+          await EngineBugTracking.initCrashReporting(disabledModel);
+          await EngineBugTracking.setCustomKey('mode', 'disabled_again');
+        }(), completes);
+
+        // Test switching to enabled - expect exception when Firebase not initialized
+        expect(() async {
+          await EngineBugTracking.initCrashReporting(enabledModel);
+        }, throwsA(anything));
       });
     });
   });

@@ -19,7 +19,7 @@ class EngineBugTrackingInicializer implements IEngineBaseInitializer<EngineBugTr
     }
 
     try {
-      await EngineBugTracking.initCrashReporting(params!.crashlyticsEnabled);
+      await EngineBugTracking.initCrashReporting(params!);
     } catch (e, stack) {
       EngineLog.error('Failed to initialize initCrashReporting: ${e.toString()}', error: e, stackTrace: stack);
     }

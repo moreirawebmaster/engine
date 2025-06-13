@@ -18,15 +18,15 @@ class EngineBugTracking {
 
   /// Firebase Crashlytics instance for crash reporting
   static FirebaseCrashlytics? _crashlytics;
-  static bool _isEnableFirebaseCrashlytics = false;
+  static EngineBugTrackingModel? _engineBugTrackingModel;
 
   /// Initialize crash reporting functionality
   ///
-  /// [isEnableFirebaseCrashlytics] determines whether Firebase Crashlytics should be enabled
-  static Future<void> initCrashReporting(final bool isEnableFirebaseCrashlytics) async {
-    _isEnableFirebaseCrashlytics = isEnableFirebaseCrashlytics;
+  /// [engineBugTrackingModel] is the model that contains the configuration for the bug tracking
+  static Future<void> initCrashReporting(final EngineBugTrackingModel engineBugTrackingModel) async {
+    _engineBugTrackingModel = engineBugTrackingModel;
 
-    if (_isEnableFirebaseCrashlytics) {
+    if (_engineBugTrackingModel?.crashlyticsEnabled == true) {
       _crashlytics = FirebaseCrashlytics.instance;
       await _crashlytics?.setCrashlyticsCollectionEnabled(true);
     }
@@ -37,7 +37,7 @@ class EngineBugTracking {
   /// [key] The key for the custom data
   /// [value] The value for the custom data
   static Future<void> setCustomKey(final String key, final dynamic value) async {
-    if (_isEnableFirebaseCrashlytics) {
+    if (_engineBugTrackingModel?.crashlyticsEnabled == true) {
       await _crashlytics?.setCustomKey(key, value.toString());
     }
   }
@@ -46,7 +46,7 @@ class EngineBugTracking {
   ///
   /// [identifier] The user identifier to set
   static Future<void> setUserIdentifier(final String identifier) async {
-    if (_isEnableFirebaseCrashlytics) {
+    if (_engineBugTrackingModel?.crashlyticsEnabled == true) {
       await _crashlytics?.setUserIdentifier(identifier);
     }
   }
@@ -54,14 +54,14 @@ class EngineBugTracking {
   /// Force a test crash (only for testing)
   static Future<void> testCrash() async {
     if (kDebugMode) {
-      if (_isEnableFirebaseCrashlytics) {
+      if (_engineBugTrackingModel?.crashlyticsEnabled == true) {
         _crashlytics?.crash();
       }
     }
   }
 
   static Future<void> log(final String message) async {
-    if (_isEnableFirebaseCrashlytics) {
+    if (_engineBugTrackingModel?.crashlyticsEnabled == true) {
       await _crashlytics?.log(message);
     }
   }
@@ -73,7 +73,7 @@ class EngineBugTracking {
     final String? reason,
     final Map<String, dynamic>? data,
   }) async {
-    if (_isEnableFirebaseCrashlytics) {
+    if (_engineBugTrackingModel?.crashlyticsEnabled == true) {
       await _crashlytics?.recordError(
         error,
         stackTrace,
@@ -86,7 +86,7 @@ class EngineBugTracking {
   }
 
   static Future<void> recordFlutterError(final FlutterErrorDetails details) async {
-    if (_isEnableFirebaseCrashlytics) {
+    if (_engineBugTrackingModel?.crashlyticsEnabled == true) {
       await _crashlytics?.recordFlutterError(details);
     }
   }
