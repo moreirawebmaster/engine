@@ -36,7 +36,7 @@ class EngineUserService extends EngineBaseService {
 
   Future<void> _setBugTrackingUser(final EngineUserModel user) async {
     await Future.wait([
-      EngineBugTracking.setUserIdentifier(user.id.toString()),
+      EngineBugTracking.setUserIdentifier(user.id.toString(), user.email, user.name),
       EngineBugTracking.setCustomKey('email', user.email),
       EngineBugTracking.setCustomKey('name', user.name),
     ]);

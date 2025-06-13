@@ -8,8 +8,14 @@ void main() {
     late EngineBugTrackingModel enabledModel;
 
     setUpAll(() {
-      disabledModel = EngineBugTrackingModel(crashlyticsEnabled: false);
-      enabledModel = EngineBugTrackingModel(crashlyticsEnabled: true);
+      disabledModel = EngineBugTrackingModel(
+        crashlyticsEnabled: false,
+        faroEnabled: false,
+      );
+      enabledModel = EngineBugTrackingModel(
+        crashlyticsEnabled: true,
+        faroEnabled: false,
+      );
     });
 
     group('Class Structure and Initialization', () {
@@ -124,7 +130,7 @@ void main() {
         // Act & Assert - Test edge cases
         await expectLater(() async {
           await EngineBugTracking.setCustomKey('empty_string', '');
-          await EngineBugTracking.setCustomKey('null_value', null);
+          await EngineBugTracking.setCustomKey('null_value', 'null');
           await EngineBugTracking.setCustomKey('zero', 0);
           await EngineBugTracking.setCustomKey('false_value', false);
         }(), completes);
@@ -772,9 +778,9 @@ void main() {
     group('Firebase Enabled vs Disabled', () {
       test('should handle initialization with Firebase enabled gracefully', () async {
         // Act & Assert - Should handle Firebase not being initialized gracefully
-        expect(() async {
+        await expectLater(() async {
           await EngineBugTracking.init(enabledModel);
-        }, throwsA(anything));
+        }(), completes);
       });
 
       test('should work with different model configurations', () async {
@@ -785,10 +791,10 @@ void main() {
           await EngineBugTracking.log('Test with disabled Firebase');
         }(), completes);
 
-        // Test with enabled model - expect exception when Firebase not initialized
-        expect(() async {
+        // Test with enabled model - should complete gracefully even when Firebase not initialized
+        await expectLater(() async {
           await EngineBugTracking.init(enabledModel);
-        }, throwsA(anything));
+        }(), completes);
       });
 
       test('should handle model switching between disabled and enabled', () async {
@@ -801,12 +807,11 @@ void main() {
           // Switch back to disabled (should work)
           await EngineBugTracking.init(disabledModel);
           await EngineBugTracking.setCustomKey('mode', 'disabled_again');
-        }(), completes);
 
-        // Test switching to enabled - expect exception when Firebase not initialized
-        expect(() async {
+          // Switch to enabled - should work gracefully even when Firebase not initialized
           await EngineBugTracking.init(enabledModel);
-        }, throwsA(anything));
+          await EngineBugTracking.setCustomKey('mode', 'enabled');
+        }(), completes);
       });
     });
   });

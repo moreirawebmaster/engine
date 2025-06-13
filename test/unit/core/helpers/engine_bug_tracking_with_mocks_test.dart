@@ -7,7 +7,10 @@ void main() {
     late EngineBugTrackingModel disabledModel;
 
     setUpAll(() {
-      disabledModel = EngineBugTrackingModel(crashlyticsEnabled: false);
+      disabledModel = EngineBugTrackingModel(
+        crashlyticsEnabled: false,
+        faroEnabled: false,
+      );
     });
 
     group('Basic Functionality Tests', () {
@@ -133,8 +136,8 @@ void main() {
         // Act & Assert - Test different configurations
         await expectLater(() async {
           final configs = [
-            EngineBugTrackingModel(crashlyticsEnabled: false),
-            EngineBugTrackingModel(crashlyticsEnabled: false),
+            EngineBugTrackingModel(crashlyticsEnabled: false, faroEnabled: false),
+            EngineBugTrackingModel(crashlyticsEnabled: false, faroEnabled: false),
           ];
 
           for (final config in configs) {
@@ -173,7 +176,10 @@ void main() {
       test('should handle complete error tracking flow with Firebase disabled', () async {
         // Act & Assert - Complete flow should work
         await expectLater(() async {
-          final model = EngineBugTrackingModel(crashlyticsEnabled: false);
+          final model = EngineBugTrackingModel(
+            crashlyticsEnabled: false,
+            faroEnabled: false,
+          );
           await EngineBugTracking.init(model);
 
           // Simulate user session
