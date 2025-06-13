@@ -34,16 +34,18 @@ class EngineLog {
       level: _getLogLevelInt(levelLog),
     );
 
-    unawaited(EngineBugTracking.log(logMessage));
+    if (EngineBugTracking.isEnabled) {
+      unawaited(EngineBugTracking.log(logMessage));
 
-    if (levelLog == EngineLogLevel.error || levelLog == EngineLogLevel.fatal) {
-      await EngineBugTracking.recordError(
-        error ?? Exception(logMessage),
-        stackTrace ?? StackTrace.current,
-        isFatal: levelLog == EngineLogLevel.fatal,
-        reason: logMessage,
-        data: data,
-      );
+      if (levelLog == EngineLogLevel.error || levelLog == EngineLogLevel.fatal) {
+        await EngineBugTracking.recordError(
+          error ?? Exception(logMessage),
+          stackTrace ?? StackTrace.current,
+          isFatal: levelLog == EngineLogLevel.fatal,
+          reason: logMessage,
+          data: data,
+        );
+      }
     }
   }
 

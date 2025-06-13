@@ -45,7 +45,17 @@ class FirebaseTestHelper {
     test('$testName - with Firebase Crashlytics enabled', () async {
       // Arrange
       setupFirebaseMocks();
-      final model = EngineBugTrackingModel(crashlyticsEnabled: true);
+      final model = EngineBugTrackingModel(
+        crashlyticsConfig: CrashlyticsConfig(enabled: true),
+        faroConfig: EngineFaroConfig(
+          enabled: false,
+          endpoint: '',
+          appName: '',
+          appVersion: '',
+          environment: '',
+          apiKey: '',
+        ),
+      );
 
       // Act & Assert
       await testBody(model);
@@ -219,7 +229,17 @@ class FirebaseTestHelper {
   }) async {
     test('$testName - with Firebase Crashlytics disabled', () async {
       // Arrange
-      final model = EngineBugTrackingModel(crashlyticsEnabled: false);
+      final model = EngineBugTrackingModel(
+        crashlyticsConfig: CrashlyticsConfig(enabled: false),
+        faroConfig: EngineFaroConfig(
+          enabled: false,
+          endpoint: '',
+          appName: '',
+          appVersion: '',
+          environment: '',
+          apiKey: '',
+        ),
+      );
       await EngineBugTracking.init(model);
 
       // Act & Assert - Should complete without Firebase calls
@@ -231,7 +251,17 @@ class FirebaseTestHelper {
   static EngineAnalyticsModel createAnalyticsModel([final bool enabled = true]) => EngineAnalyticsModel(firebaseAnalyticsEnabled: enabled);
 
   /// Creates BugTracking model for unit tests
-  static EngineBugTrackingModel createBugTrackingModel([final bool enabled = true]) => EngineBugTrackingModel(crashlyticsEnabled: enabled);
+  static EngineBugTrackingModel createBugTrackingModel([final bool enabled = true]) => EngineBugTrackingModel(
+        crashlyticsConfig: CrashlyticsConfig(enabled: enabled),
+        faroConfig: EngineFaroConfig(
+          enabled: false,
+          endpoint: '',
+          appName: '',
+          appVersion: '',
+          environment: '',
+          apiKey: '',
+        ),
+      );
 
   /// Comprehensive Analytics test suite
   static void runAnalyticsTestSuite() {
@@ -274,7 +304,7 @@ class FirebaseTestHelper {
         testName: 'Basic BugTracking Operations',
         operations: () async {
           await EngineBugTracking.setCustomKey('test_key', 'test_value');
-          await EngineBugTracking.setUserIdentifier('test_user_123');
+          await EngineBugTracking.setUserIdentifier('test_user_123', 'test@example.com', 'Test User');
           await EngineBugTracking.log('Test log message');
           await EngineBugTracking.recordError(
             Exception('Test exception'),
@@ -289,7 +319,7 @@ class FirebaseTestHelper {
         testName: 'BugTracking Operations with Firebase Disabled',
         operations: () async {
           await EngineBugTracking.setCustomKey('key', 'value');
-          await EngineBugTracking.setUserIdentifier('user');
+          await EngineBugTracking.setUserIdentifier('user', 'user@example.com', 'User Name');
           await EngineBugTracking.log('Log message');
         },
       );

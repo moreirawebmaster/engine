@@ -4,27 +4,37 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('EngineBugTracking with Firebase Disabled', () {
-    late EngineBugTrackingModel disabledModel;
+    late EngineBugTrackingModel testModel;
+    var isInitialized = false;
 
-    setUpAll(() {
-      disabledModel = EngineBugTrackingModel(
-        crashlyticsEnabled: false,
-        faroEnabled: false,
+    setUpAll(() async {
+      // Initialize once with disabled services to avoid Firebase dependencies and late final issues
+      testModel = EngineBugTrackingModel(
+        crashlyticsConfig: CrashlyticsConfig(enabled: false),
+        faroConfig: EngineFaroConfig(
+          enabled: false,
+          endpoint: '',
+          appName: '',
+          appVersion: '',
+          environment: '',
+          apiKey: '',
+        ),
       );
+
+      if (!isInitialized) {
+        await EngineBugTracking.init(testModel);
+        isInitialized = true;
+      }
     });
 
     group('Basic Functionality Tests', () {
       test('should initialize crash reporting with Firebase disabled', () async {
-        // Act & Assert
-        await expectLater(() async {
-          await EngineBugTracking.init(disabledModel);
-        }(), completes);
+        // Act & Assert - Should already be initialized
+        expect(EngineBugTracking.isCrashlyticsEnabled, isFalse);
+        expect(EngineBugTracking.isFaroEnabled, isFalse);
       });
 
       test('should set custom keys with Firebase disabled', () async {
-        // Arrange
-        await EngineBugTracking.init(disabledModel);
-
         // Act & Assert - Should complete without errors
         await expectLater(() async {
           await EngineBugTracking.setCustomKey('test_key', 'test_value');
@@ -32,19 +42,13 @@ void main() {
       });
 
       test('should set user identifier with Firebase disabled', () async {
-        // Arrange
-        await EngineBugTracking.init(disabledModel);
-
         // Act & Assert - Should complete without errors
         await expectLater(() async {
-          await EngineBugTracking.setUserIdentifier('test_user_123');
+          await EngineBugTracking.setUserIdentifier('test_user_123', 'test@example.com', 'Test User');
         }(), completes);
       });
 
       test('should log messages with Firebase disabled', () async {
-        // Arrange
-        await EngineBugTracking.init(disabledModel);
-
         // Act & Assert - Should complete without errors
         await expectLater(() async {
           await EngineBugTracking.log('Test log message');
@@ -52,9 +56,6 @@ void main() {
       });
 
       test('should record errors with Firebase disabled', () async {
-        // Arrange
-        await EngineBugTracking.init(disabledModel);
-
         // Act & Assert - Should complete without errors
         await expectLater(() async {
           await EngineBugTracking.recordError(
@@ -67,9 +68,6 @@ void main() {
       });
 
       test('should record Flutter errors with Firebase disabled', () async {
-        // Arrange
-        await EngineBugTracking.init(disabledModel);
-
         // Act & Assert - Should complete without errors
         await expectLater(() async {
           await EngineBugTracking.recordFlutterError(
@@ -84,9 +82,6 @@ void main() {
       });
 
       test('should handle test crash with Firebase disabled', () async {
-        // Arrange
-        await EngineBugTracking.init(disabledModel);
-
         // Act & Assert - Should complete without errors
         await expectLater(() async {
           await EngineBugTracking.testCrash();
@@ -94,9 +89,6 @@ void main() {
       });
 
       test('should handle multiple custom keys with Firebase disabled', () async {
-        // Arrange
-        await EngineBugTracking.init(disabledModel);
-
         // Act & Assert - Should complete without errors
         await expectLater(() async {
           await EngineBugTracking.setCustomKey('key1', 'value1');
@@ -106,9 +98,6 @@ void main() {
       });
 
       test('should handle different error types with Firebase disabled', () async {
-        // Arrange
-        await EngineBugTracking.init(disabledModel);
-
         // Act & Assert - Should complete without errors for different error types
         await expectLater(() async {
           final errorTypes = [
@@ -133,38 +122,54 @@ void main() {
 
     group('Configuration Tests', () {
       test('should handle different configuration combinations with Firebase disabled', () async {
-        // Act & Assert - Test different configurations
+        // Act & Assert - Test different model configurations (without initializing due to singleton)
         await expectLater(() async {
-          final configs = [
-            EngineBugTrackingModel(crashlyticsEnabled: false, faroEnabled: false),
-            EngineBugTrackingModel(crashlyticsEnabled: false, faroEnabled: false),
-          ];
+          final config1 = EngineBugTrackingModel(
+            crashlyticsConfig: CrashlyticsConfig(enabled: false),
+            faroConfig: EngineFaroConfig(
+              enabled: false,
+              endpoint: '',
+              appName: '',
+              appVersion: '',
+              environment: '',
+              apiKey: '',
+            ),
+          );
+          final config2 = EngineBugTrackingModel(
+            crashlyticsConfig: CrashlyticsConfig(enabled: false),
+            faroConfig: EngineFaroConfig(
+              enabled: false,
+              endpoint: '',
+              appName: '',
+              appVersion: '',
+              environment: '',
+              apiKey: '',
+            ),
+          );
 
-          for (final config in configs) {
-            await EngineBugTracking.init(config);
-            await EngineBugTracking.log('Config test');
-          }
+          // Models should be created successfully
+          expect(config1, isNotNull);
+          expect(config2, isNotNull);
+          expect(config1.crashlyticsConfig.enabled, isFalse);
+          expect(config2.faroConfig.enabled, isFalse);
+
+          // Test operations with current initialized model
+          await EngineBugTracking.log('Config test');
         }(), completes);
       });
     });
 
     group('Error Scenarios', () {
       test('should handle methods calls gracefully when Firebase disabled', () async {
-        // Arrange
-        await EngineBugTracking.init(disabledModel);
-
         // Act & Assert - All methods should complete normally
         await expectLater(() async {
           await EngineBugTracking.setCustomKey('key', 'value');
-          await EngineBugTracking.setUserIdentifier('user');
+          await EngineBugTracking.setUserIdentifier('user', 'user@example.com', 'User Name');
           await EngineBugTracking.log('Log message');
         }(), completes);
       });
 
       test('should handle null error gracefully', () async {
-        // Arrange
-        await EngineBugTracking.init(disabledModel);
-
         // Act & Assert - Should handle null error gracefully
         await expectLater(() async {
           await EngineBugTracking.log('Error test log');
@@ -176,14 +181,8 @@ void main() {
       test('should handle complete error tracking flow with Firebase disabled', () async {
         // Act & Assert - Complete flow should work
         await expectLater(() async {
-          final model = EngineBugTrackingModel(
-            crashlyticsEnabled: false,
-            faroEnabled: false,
-          );
-          await EngineBugTracking.init(model);
-
           // Simulate user session
-          await EngineBugTracking.setUserIdentifier('test_user_session');
+          await EngineBugTracking.setUserIdentifier('test_user_session', 'session@example.com', 'Session User');
           await EngineBugTracking.setCustomKey('session_start', DateTime.now().toString());
 
           // Simulate app operations
@@ -203,9 +202,6 @@ void main() {
       });
 
       test('should handle multiple concurrent error reports with Firebase disabled', () async {
-        // Arrange
-        await EngineBugTracking.init(disabledModel);
-
         // Act & Assert - Concurrent operations should work
         await expectLater(() async {
           final futures = <Future<void>>[];
@@ -233,13 +229,10 @@ void main() {
       });
 
       test('should handle session tracking with Firebase disabled', () async {
-        // Arrange
-        await EngineBugTracking.init(disabledModel);
-
         // Act & Assert - Session tracking should work
         await expectLater(() async {
           // Start session
-          await EngineBugTracking.setUserIdentifier('session_user');
+          await EngineBugTracking.setUserIdentifier('session_user', 'session@example.com', 'Session User');
           await EngineBugTracking.setCustomKey('session_id', 'sess_123456');
           await EngineBugTracking.setCustomKey('app_version', '1.0.0');
           await EngineBugTracking.setCustomKey('platform', 'flutter');

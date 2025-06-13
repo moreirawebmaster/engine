@@ -21,6 +21,7 @@ class EngineBugTracking {
   static FirebaseCrashlytics? _crashlytics;
   static Faro? _faro;
   static late final EngineBugTrackingModel _engineBugTrackingModel;
+  static bool _isInitialized = false;
 
   /// Initialize crash reporting functionality
   ///
@@ -32,6 +33,8 @@ class EngineBugTracking {
       if (model.crashlyticsConfig.enabled) _initCrashlytics(),
       if (model.faroConfig.enabled) _initFaro(),
     ]);
+
+    _isInitialized = true;
   }
 
   static Future<void> _initCrashlytics() async {
@@ -55,12 +58,6 @@ class EngineBugTracking {
       ),
     );
   }
-
-  /// Check if Firebase Crashlytics is enabled and available
-  static bool get isCrashlyticsEnabled => _engineBugTrackingModel.crashlyticsConfig.enabled;
-
-  /// Check if Faro is enabled and available
-  static bool get isFaroEnabled => _engineBugTrackingModel.faroConfig.enabled;
 
   /// Set a custom key-value pair for crash reporting
   static Future<void> setCustomKey(final String key, final Object value) async {
@@ -175,4 +172,13 @@ class EngineBugTracking {
       }
     }
   }
+
+  /// Check if Firebase Crashlytics is enabled and available
+  static bool get isCrashlyticsEnabled => _engineBugTrackingModel.crashlyticsConfig.enabled;
+
+  /// Check if Faro is enabled and available
+  static bool get isFaroEnabled => _engineBugTrackingModel.faroConfig.enabled;
+
+  /// Check if the bug tracking is enabled
+  static bool get isEnabled => _isInitialized && (isCrashlyticsEnabled || isFaroEnabled);
 }
