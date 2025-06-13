@@ -5,4 +5,5 @@ class EngineConstant {
   static const String jsonContentType = 'application/json';
   static const String formDataContentType = 'application/x-www-form-urlencoded';
   static const Map<String, dynamic> mapEmpty = {'': ''};
+  static const String appUpdateKey = 'APP_UPDATE';
 }

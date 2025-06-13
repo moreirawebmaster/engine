@@ -56,7 +56,7 @@ void main() {
         // Arrange
         final httpRequest = EngineHttpRequest<String>(
           url: Uri.parse('https://api.example.com/test'),
-          method: EngineHttpMethod.get,
+          method: EngineHttpMethodTypeEnum.get,
         );
         const statusCode = 200;
         const bodyString = 'Hello World';
@@ -260,7 +260,7 @@ void main() {
         // Assert
         expect(engineResponse.httpRequest, isNotNull);
         expect(engineResponse.httpRequest!.url.toString(), equals(''));
-        expect(engineResponse.httpRequest!.method, equals(EngineHttpMethod.get));
+        expect(engineResponse.httpRequest!.method, equals(EngineHttpMethodTypeEnum.get));
       });
     });
 

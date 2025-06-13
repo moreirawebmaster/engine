@@ -282,6 +282,8 @@ class EngineMaterialApp extends StatelessWidget {
   static Future<void> initialize({
     final EngineFirebaseModel? firebaseModel,
     final EngineBugTrackingModel? bugTrackingModel,
+    final EngineAnalyticsModel? analyticsModel,
+    final EngineFeatureFlagModel? featureFlagModel,
     final ThemeMode? themeMode,
   }) async {
     try {
@@ -292,7 +294,8 @@ class EngineMaterialApp extends StatelessWidget {
       await EngineInitializer(initializers: [
         EngineFirebaseInitializer(firebaseModel),
         EngineBugTrackingInitializer(bugTrackingModel),
-        EngineFeatureFlagInitializer([], 2),
+        EngineFeatureFlagInitializer(featureFlagModel),
+        EngineAnalyticsInitializer(analyticsModel),
       ]).init();
 
       // TODO: Implement token service

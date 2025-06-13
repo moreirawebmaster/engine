@@ -1,13 +1,10 @@
-import 'package:engine/data/data.dart';
+import 'package:engine/lib.dart';
 
 class EngineUpdateInfoModel {
   final String env;
   final String url;
   final String version;
   final int versionCode;
-  final List<String> rolesUpdate;
-  final List<int> usersIds;
-  final List<int> virtualStoresIds;
   final bool forceAll;
 
   EngineUpdateInfoModel({
@@ -15,55 +12,34 @@ class EngineUpdateInfoModel {
     required this.url,
     required this.version,
     required this.versionCode,
-    required this.rolesUpdate,
-    required this.usersIds,
-    required this.virtualStoresIds,
     required this.forceAll,
   });
 
-  factory EngineUpdateInfoModel.fromJson(final Map<String, dynamic> json) => EngineUpdateInfoModel(
-        env: json['env'] ?? '',
-        url: json['url_update'] ?? '',
-        version: json['version'] ?? '',
-        versionCode: json['version_code'] ?? 0,
-        rolesUpdate: List<String>.from(json['roles_update'] ?? []),
-        usersIds: List<int>.from(json['users_ids'] ?? []),
-        virtualStoresIds: List<int>.from(json['virtual_stores_ids'] ?? []),
-        forceAll: json['force_all'] ?? false,
+  factory EngineUpdateInfoModel.fromMap(final Map<String, dynamic> map) => EngineUpdateInfoModel(
+        env: map['env'] ?? '',
+        url: map['url_update'] ?? '',
+        version: map['version'] ?? '',
+        versionCode: map['version_code'] ?? 0,
+        forceAll: map['force_all'] ?? false,
       );
 
-  bool shouldForceUpdate({
-    required final int currentBuildCode,
-    final int userId = 0,
-    final List<String> roles = const [],
-    final int virtualStoreId = 0,
-  }) {
-    final currentEnv = EngineEnvironment.fromEnv(const String.fromEnvironment('env', defaultValue: 'prd'));
-
-    if (EngineEnvironment.fromEnv(env) != currentEnv) {
+  bool shouldForceUpdate(final int currentBuildCode) {
+    if (EngineEnvironmentTypeEnum.fromName(env) != EngineAppSettings().env) {
+      EngineLog.debug('UpdateInfoModel: env is not the same as the current environment');
       return false;
     }
 
     if (versionCode <= currentBuildCode) {
+      EngineLog.debug('UpdateInfoModel: versionCode is not greater than the current build code');
       return false;
     }
 
     if (forceAll) {
+      EngineLog.debug('UpdateInfoModel: forceAll is true');
       return true;
     }
 
-    if (rolesUpdate.any((final role) => roles.contains(role))) {
-      return true;
-    }
-
-    if (usersIds.contains(userId)) {
-      return true;
-    }
-
-    if (virtualStoreId > 0 && virtualStoresIds.contains(virtualStoreId)) {
-      return true;
-    }
-
+    EngineLog.debug('UpdateInfoModel: versionCode is greater than the current build code');
     return false;
   }
 }

@@ -949,7 +949,7 @@ void main() {
 
       test('should handle deeply nested structures', () {
         // Arrange
-        final deepMap = <String, dynamic>{'level_0': {}};
+        final deepMap = <String, dynamic>{'level_0': <String, dynamic>{}};
         var current = deepMap['level_0'] as Map<String, dynamic>;
 
         for (var i = 1; i <= 10; i++) {

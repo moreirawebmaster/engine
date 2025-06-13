@@ -11,7 +11,14 @@ void main() {
     late Map<String, dynamic> invalidUserData;
 
     setUpAll(() {
-      validUserData = TestUtils.createValidUserData();
+      // Using fixed data instead of TestUtils to avoid incremental IDs
+      validUserData = {
+        'id': 1,
+        'name': 'Test User',
+        'email': 'test@example.com',
+        'imageUrl': 'https://example.com/avatar.jpg',
+        'permissions': ['read', 'write'],
+      };
       invalidUserData = TestUtils.createInvalidUserData();
     });
 

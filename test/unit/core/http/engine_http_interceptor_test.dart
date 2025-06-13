@@ -68,7 +68,7 @@ void main() {
       test('should handle synchronous request processing', () {
         // Arrange
         final interceptor = MockEngineHttpRequestInterceptor();
-        final request = EngineHttpRequest(url: Uri.parse('https://example.com'), method: EngineHttpMethod.get);
+        final request = EngineHttpRequest(url: Uri.parse('https://example.com'), method: EngineHttpMethodTypeEnum.get);
 
         // Act & Assert
         expect(() {
@@ -80,7 +80,7 @@ void main() {
       test('should handle asynchronous request processing', () async {
         // Arrange
         final interceptor = AsyncMockEngineHttpRequestInterceptor();
-        final request = EngineHttpRequest(url: Uri.parse('https://example.com'), method: EngineHttpMethod.get);
+        final request = EngineHttpRequest(url: Uri.parse('https://example.com'), method: EngineHttpMethodTypeEnum.get);
 
         // Act & Assert
         await expectLater(() async {
@@ -93,9 +93,9 @@ void main() {
         // Arrange
         final interceptor = AsyncMockEngineHttpRequestInterceptor();
         final requests = [
-          EngineHttpRequest(url: Uri.parse('https://api.example.com/users'), method: EngineHttpMethod.get),
-          EngineHttpRequest(url: Uri.parse('https://api.example.com/posts'), method: EngineHttpMethod.get),
-          EngineHttpRequest(url: Uri.parse('https://api.example.com/comments'), method: EngineHttpMethod.get),
+          EngineHttpRequest(url: Uri.parse('https://api.example.com/users'), method: EngineHttpMethodTypeEnum.get),
+          EngineHttpRequest(url: Uri.parse('https://api.example.com/posts'), method: EngineHttpMethodTypeEnum.get),
+          EngineHttpRequest(url: Uri.parse('https://api.example.com/comments'), method: EngineHttpMethodTypeEnum.get),
         ];
 
         // Act & Assert
@@ -111,10 +111,10 @@ void main() {
         // Arrange
         final interceptor = MockEngineHttpRequestInterceptor();
         final requests = [
-          EngineHttpRequest(url: Uri.parse('https://api.example.com/get'), method: EngineHttpMethod.get),
-          EngineHttpRequest(url: Uri.parse('https://api.example.com/post'), method: EngineHttpMethod.post),
-          EngineHttpRequest(url: Uri.parse('https://api.example.com/put'), method: EngineHttpMethod.put),
-          EngineHttpRequest(url: Uri.parse('https://api.example.com/delete'), method: EngineHttpMethod.delete),
+          EngineHttpRequest(url: Uri.parse('https://api.example.com/get'), method: EngineHttpMethodTypeEnum.get),
+          EngineHttpRequest(url: Uri.parse('https://api.example.com/post'), method: EngineHttpMethodTypeEnum.post),
+          EngineHttpRequest(url: Uri.parse('https://api.example.com/put'), method: EngineHttpMethodTypeEnum.put),
+          EngineHttpRequest(url: Uri.parse('https://api.example.com/delete'), method: EngineHttpMethodTypeEnum.delete),
         ];
 
         // Act & Assert
@@ -131,7 +131,7 @@ void main() {
         expect(() {
           final syncInterceptor = MockEngineHttpRequestInterceptor();
           final asyncInterceptor = AsyncMockEngineHttpRequestInterceptor();
-          final request = EngineHttpRequest(url: Uri.parse('https://example.com'), method: EngineHttpMethod.get);
+          final request = EngineHttpRequest(url: Uri.parse('https://example.com'), method: EngineHttpMethodTypeEnum.get);
 
           // Both should work with FutureOr
           final syncResult = syncInterceptor.onRequest(request);
@@ -233,7 +233,7 @@ void main() {
           // Simulate authentication request
           final authRequest = EngineHttpRequest(
             url: Uri.parse('https://api.example.com/user/profile'),
-            method: EngineHttpMethod.get,
+            method: EngineHttpMethodTypeEnum.get,
             headers: {'Authorization': 'Bearer token123'},
           );
 
@@ -250,7 +250,7 @@ void main() {
           // Simulate logged request/response cycle
           final request = EngineHttpRequest(
             url: Uri.parse('https://api.example.com/data'),
-            method: EngineHttpMethod.get,
+            method: EngineHttpMethodTypeEnum.get,
           );
 
           final response = EngineHttpResponse(body: 'processed');
@@ -287,7 +287,7 @@ void main() {
           // Simulate retry scenario
           final request = EngineHttpRequest(
             url: Uri.parse('https://api.example.com/retry'),
-            method: EngineHttpMethod.get,
+            method: EngineHttpMethodTypeEnum.get,
           );
 
           // Process multiple times (retry simulation)
@@ -306,7 +306,7 @@ void main() {
           // Simulate cacheable request
           final cacheableRequest = EngineHttpRequest(
             url: Uri.parse('https://api.example.com/cache/data'),
-            method: EngineHttpMethod.get,
+            method: EngineHttpMethodTypeEnum.get,
             headers: {'Cache-Control': 'max-age=300'},
           );
 
@@ -330,7 +330,7 @@ void main() {
         expect(() {
           final interceptor = MockEngineHttpRequestInterceptor();
 
-          final emptyRequest = EngineHttpRequest(url: Uri.parse(''), method: EngineHttpMethod.get);
+          final emptyRequest = EngineHttpRequest(url: Uri.parse(''), method: EngineHttpMethodTypeEnum.get);
           final result = interceptor.onRequest(emptyRequest);
           expect(result, isA<EngineHttpRequest>());
         }, returnsNormally);
@@ -355,7 +355,7 @@ void main() {
 
           final malformedRequest = EngineHttpRequest(
             url: Uri.parse('http://invalid-url'),
-            method: EngineHttpMethod.get,
+            method: EngineHttpMethodTypeEnum.get,
           );
           final result = interceptor.onRequest(malformedRequest);
           expect(result, isA<EngineHttpRequest>());
@@ -374,7 +374,7 @@ void main() {
 
           final requestWithLargeHeaders = EngineHttpRequest(
             url: Uri.parse('https://api.example.com/test'),
-            method: EngineHttpMethod.get,
+            method: EngineHttpMethodTypeEnum.get,
             headers: largeHeaders,
           );
 
@@ -392,7 +392,7 @@ void main() {
             (final index) => Future(() async {
                   final request = EngineHttpRequest(
                     url: Uri.parse('https://api.example.com/concurrent/$index'),
-                    method: EngineHttpMethod.get,
+                    method: EngineHttpMethodTypeEnum.get,
                   );
 
                   final response = EngineHttpResponse(body: 'response $index');
@@ -419,7 +419,7 @@ void main() {
 
             final request = EngineHttpRequest(
               url: Uri.parse('https://api.example.com/rapid/$i'),
-              method: EngineHttpMethod.get,
+              method: EngineHttpMethodTypeEnum.get,
             );
 
             final result = interceptor.onRequest(request);
@@ -440,7 +440,7 @@ void main() {
               (final index) => Future(() {
                     final request = EngineHttpRequest(
                       url: Uri.parse('https://api.example.com/volume/$index'),
-                      method: EngineHttpMethod.get,
+                      method: EngineHttpMethodTypeEnum.get,
                       headers: {'Request-ID': 'req_$index'},
                     );
 
@@ -471,7 +471,7 @@ void main() {
             futures.add(Future(() async {
               final request = EngineHttpRequest(
                 url: Uri.parse('https://api.example.com/varying/$i'),
-                method: EngineHttpMethod.get,
+                method: EngineHttpMethodTypeEnum.get,
               );
 
               final response = EngineHttpResponse(body: 'variation $i');
@@ -498,7 +498,7 @@ void main() {
         await expectLater(() async {
           final request = EngineHttpRequest(
             url: Uri.parse('https://api.example.com/mixed'),
-            method: EngineHttpMethod.get,
+            method: EngineHttpMethodTypeEnum.get,
           );
           final response = EngineHttpResponse(body: 'mixed');
 

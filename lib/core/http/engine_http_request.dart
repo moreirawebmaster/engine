@@ -28,7 +28,7 @@ class EngineHttpRequest<T> {
 
   EngineHttpRequest.empty()
       : url = Uri.parse(''),
-        method = EngineHttpMethod.get,
+        method = EngineHttpMethodTypeEnum.get,
         headers = null,
         bodyBytes = null,
         followRedirects = true,
@@ -40,7 +40,7 @@ class EngineHttpRequest<T> {
 
   factory EngineHttpRequest.fromRequest(final Request request) => EngineHttpRequest<T>(
         url: request.url,
-        method: EngineHttpMethod.fromString(request.method),
+        method: EngineHttpMethodTypeEnum.fromString(request.method),
         headers: request.headers,
         bodyBytes: request.bodyBytes,
         followRedirects: request.followRedirects,
@@ -74,7 +74,7 @@ class EngineHttpRequest<T> {
 
   /// The Http Method from this [Request]
   /// ex: `GET`,`POST`,`PUT`,`DELETE`, `PATCH`
-  final EngineHttpMethod method;
+  final EngineHttpMethodTypeEnum method;
 
   final int? contentLength;
 

@@ -35,11 +35,11 @@ void main() {
           const url = 'https://api.example.com/data';
           final stringRequest = EngineHttpRequest<String>(
             url: Uri.parse(url),
-            method: EngineHttpMethod.get,
+            method: EngineHttpMethodTypeEnum.get,
           );
           final mapRequest = EngineHttpRequest<Map<String, dynamic>>(
             url: Uri.parse(url),
-            method: EngineHttpMethod.post,
+            method: EngineHttpMethodTypeEnum.post,
           );
 
           expect(stringRequest, isA<EngineHttpRequest<String>>());
@@ -52,7 +52,7 @@ void main() {
       test('should create request with required parameters', () {
         // Arrange
         final url = Uri.parse('https://api.example.com/test');
-        const method = EngineHttpMethod.get;
+        const method = EngineHttpMethodTypeEnum.get;
 
         // Act
         final request = EngineHttpRequest<String>(
@@ -76,7 +76,7 @@ void main() {
       test('should create request with all parameters', () {
         // Arrange
         final url = Uri.parse('https://api.example.com/create');
-        const method = EngineHttpMethod.post;
+        const method = EngineHttpMethodTypeEnum.post;
         final headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer token'};
         final bodyBytes = Stream.fromIterable([
           [1, 2, 3, 4, 5]
@@ -118,7 +118,7 @@ void main() {
 
         // Assert
         expect(request.url, equals(Uri.parse('')));
-        expect(request.method, equals(EngineHttpMethod.get));
+        expect(request.method, equals(EngineHttpMethodTypeEnum.get));
         expect(request.headers, isNull);
         expect(request.bodyBytes, isNull);
         expect(request.followRedirects, isTrue);
@@ -146,7 +146,7 @@ void main() {
             final url = Uri.parse(urlString);
             final request = EngineHttpRequest<String>(
               url: url,
-              method: EngineHttpMethod.get,
+              method: EngineHttpMethodTypeEnum.get,
             );
 
             expect(request.url.toString(), equals(urlString));
@@ -159,11 +159,11 @@ void main() {
         // Act & Assert - Verify HTTP method support
         expect(() {
           final httpMethods = [
-            EngineHttpMethod.get,
-            EngineHttpMethod.post,
-            EngineHttpMethod.put,
-            EngineHttpMethod.patch,
-            EngineHttpMethod.delete,
+            EngineHttpMethodTypeEnum.get,
+            EngineHttpMethodTypeEnum.post,
+            EngineHttpMethodTypeEnum.put,
+            EngineHttpMethodTypeEnum.patch,
+            EngineHttpMethodTypeEnum.delete,
           ];
 
           final url = Uri.parse('https://api.example.com/test');
@@ -186,7 +186,7 @@ void main() {
         // Act
         final request = EngineHttpRequest<String>(
           url: url,
-          method: EngineHttpMethod.get,
+          method: EngineHttpMethodTypeEnum.get,
         );
 
         // Assert
@@ -214,7 +214,7 @@ void main() {
         // Act
         final request = EngineHttpRequest<String>(
           url: Uri.parse('https://api.example.com/test'),
-          method: EngineHttpMethod.post,
+          method: EngineHttpMethodTypeEnum.post,
           headers: headers,
         );
 
@@ -233,7 +233,7 @@ void main() {
           for (final length in contentLengths) {
             final request = EngineHttpRequest<String>(
               url: Uri.parse('https://api.example.com/upload'),
-              method: EngineHttpMethod.post,
+              method: EngineHttpMethodTypeEnum.post,
               contentLength: length,
             );
 
@@ -255,7 +255,7 @@ void main() {
         // Act
         final request = EngineHttpRequest<String>(
           url: Uri.parse('https://api.example.com/upload'),
-          method: EngineHttpMethod.post,
+          method: EngineHttpMethodTypeEnum.post,
           bodyBytes: bodyBytes,
         );
 
@@ -279,7 +279,7 @@ void main() {
           for (final config in redirectConfigs) {
             final request = EngineHttpRequest<String>(
               url: Uri.parse('https://api.example.com/redirect-test'),
-              method: EngineHttpMethod.get,
+              method: EngineHttpMethodTypeEnum.get,
               followRedirects: config['followRedirects'] as bool,
               maxRedirects: config['maxRedirects'] as int,
             );
@@ -298,7 +298,7 @@ void main() {
           for (final persistent in connectionSettings) {
             final request = EngineHttpRequest<String>(
               url: Uri.parse('https://api.example.com/test'),
-              method: EngineHttpMethod.get,
+              method: EngineHttpMethodTypeEnum.get,
               persistentConnection: persistent,
             );
 
@@ -311,7 +311,7 @@ void main() {
         // Arrange & Act
         final request = EngineHttpRequest<String>(
           url: Uri.parse('https://api.example.com/default'),
-          method: EngineHttpMethod.get,
+          method: EngineHttpMethodTypeEnum.get,
         );
 
         // Assert - Verify default values
@@ -333,7 +333,7 @@ void main() {
           String stringDecoder(final dynamic data) => data.toString();
           final stringRequest = EngineHttpRequest<String>(
             url: Uri.parse('https://api.example.com/string'),
-            method: EngineHttpMethod.get,
+            method: EngineHttpMethodTypeEnum.get,
             decoder: stringDecoder,
           );
           expect(stringRequest.decoder, equals(stringDecoder));
@@ -342,7 +342,7 @@ void main() {
           Map<String, dynamic> mapDecoder(final dynamic data) => data as Map<String, dynamic>;
           final mapRequest = EngineHttpRequest<Map<String, dynamic>>(
             url: Uri.parse('https://api.example.com/map'),
-            method: EngineHttpMethod.get,
+            method: EngineHttpMethodTypeEnum.get,
             decoder: mapDecoder,
           );
           expect(mapRequest.decoder, equals(mapDecoder));
@@ -351,7 +351,7 @@ void main() {
           List<String> listDecoder(final dynamic data) => (data as List).cast<String>();
           final listRequest = EngineHttpRequest<List<String>>(
             url: Uri.parse('https://api.example.com/list'),
-            method: EngineHttpMethod.get,
+            method: EngineHttpMethodTypeEnum.get,
             decoder: listDecoder,
           );
           expect(listRequest.decoder, equals(listDecoder));
@@ -365,7 +365,7 @@ void main() {
 
           final request = EngineHttpRequest<String>(
             url: Uri.parse('https://api.example.com/upload'),
-            method: EngineHttpMethod.post,
+            method: EngineHttpMethodTypeEnum.post,
             formData: formData,
           );
 
@@ -378,7 +378,7 @@ void main() {
         // Act
         final request = EngineHttpRequest<String>(
           url: Uri.parse('https://api.example.com/json'),
-          method: EngineHttpMethod.post,
+          method: EngineHttpMethodTypeEnum.post,
           formData: null,
         );
 
@@ -392,7 +392,7 @@ void main() {
         // Arrange
         final loginRequest = EngineHttpRequest<Map<String, dynamic>>(
           url: Uri.parse('https://api.example.com/auth/login'),
-          method: EngineHttpMethod.post,
+          method: EngineHttpMethodTypeEnum.post,
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -402,7 +402,7 @@ void main() {
 
         // Assert
         expect(loginRequest.url.path, equals('/auth/login'));
-        expect(loginRequest.method, equals(EngineHttpMethod.post));
+        expect(loginRequest.method, equals(EngineHttpMethodTypeEnum.post));
         expect(loginRequest.headers!['Content-Type'], equals('application/json'));
         expect(loginRequest.decoder, isA<Function>());
       });
@@ -411,7 +411,7 @@ void main() {
         // Arrange
         final uploadRequest = EngineHttpRequest<String>(
           url: Uri.parse('https://api.example.com/files/upload'),
-          method: EngineHttpMethod.post,
+          method: EngineHttpMethodTypeEnum.post,
           headers: {
             'Authorization': 'Bearer token123',
             'X-Upload-Type': 'document',
@@ -423,7 +423,7 @@ void main() {
 
         // Assert
         expect(uploadRequest.url.path, equals('/files/upload'));
-        expect(uploadRequest.method, equals(EngineHttpMethod.post));
+        expect(uploadRequest.method, equals(EngineHttpMethodTypeEnum.post));
         expect(uploadRequest.contentLength, equals(2048576));
         expect(uploadRequest.formData, isNotNull);
         expect(uploadRequest.followRedirects, isFalse);
@@ -433,7 +433,7 @@ void main() {
         // Arrange
         final fetchRequest = EngineHttpRequest<List<Map<String, dynamic>>>(
           url: Uri.parse('https://api.example.com/users?page=1&limit=20'),
-          method: EngineHttpMethod.get,
+          method: EngineHttpMethodTypeEnum.get,
           headers: {
             'Accept': 'application/vnd.api+json',
             'X-API-Version': '2023',
@@ -444,7 +444,7 @@ void main() {
 
         // Assert
         expect(fetchRequest.url.query, equals('page=1&limit=20'));
-        expect(fetchRequest.method, equals(EngineHttpMethod.get));
+        expect(fetchRequest.method, equals(EngineHttpMethodTypeEnum.get));
         expect(fetchRequest.headers!['Accept'], contains('application/vnd.api+json'));
         expect(fetchRequest.decoder, isA<Function>());
         expect(fetchRequest.persistentConnection, isTrue);
@@ -454,7 +454,7 @@ void main() {
         // Arrange
         final updateRequest = EngineHttpRequest<Map<String, dynamic>>(
           url: Uri.parse('https://api.example.com/users/123'),
-          method: EngineHttpMethod.put,
+          method: EngineHttpMethodTypeEnum.put,
           headers: {
             'Content-Type': 'application/json',
             'If-Match': 'etag123',
@@ -466,7 +466,7 @@ void main() {
 
         // Assert
         expect(updateRequest.url.path, equals('/users/123'));
-        expect(updateRequest.method, equals(EngineHttpMethod.put));
+        expect(updateRequest.method, equals(EngineHttpMethodTypeEnum.put));
         expect(updateRequest.headers!['If-Match'], equals('etag123'));
         expect(updateRequest.contentLength, equals(512));
       });
@@ -475,7 +475,7 @@ void main() {
         // Arrange
         final graphqlRequest = EngineHttpRequest<Map<String, dynamic>>(
           url: Uri.parse('https://api.example.com/graphql'),
-          method: EngineHttpMethod.post,
+          method: EngineHttpMethodTypeEnum.post,
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer token123',
@@ -486,7 +486,7 @@ void main() {
 
         // Assert
         expect(graphqlRequest.url.path, equals('/graphql'));
-        expect(graphqlRequest.method, equals(EngineHttpMethod.post));
+        expect(graphqlRequest.method, equals(EngineHttpMethodTypeEnum.post));
         expect(graphqlRequest.headers!['Content-Type'], equals('application/json'));
         expect(graphqlRequest.persistentConnection, isTrue);
       });
@@ -519,7 +519,7 @@ void main() {
             final url = Uri.parse(urlString);
             final request = EngineHttpRequest<String>(
               url: url,
-              method: EngineHttpMethod.get,
+              method: EngineHttpMethodTypeEnum.get,
             );
 
             expect(request.url, isA<Uri>());
@@ -538,7 +538,7 @@ void main() {
         // Act
         final request = EngineHttpRequest<String>(
           url: Uri.parse('https://api.example.com/large-headers'),
-          method: EngineHttpMethod.get,
+          method: EngineHttpMethodTypeEnum.get,
           headers: largeHeaders,
         );
 
@@ -559,7 +559,7 @@ void main() {
           for (final config in extremeConfigs) {
             final request = EngineHttpRequest<String>(
               url: Uri.parse('https://api.example.com/extreme'),
-              method: EngineHttpMethod.get,
+              method: EngineHttpMethodTypeEnum.get,
               followRedirects: config['followRedirects'] as bool,
               maxRedirects: config['maxRedirects'] as int,
             );
@@ -577,7 +577,7 @@ void main() {
           // Null stream
           final requestWithNullStream = EngineHttpRequest<String>(
             url: Uri.parse('https://api.example.com/null-stream'),
-            method: EngineHttpMethod.post,
+            method: EngineHttpMethodTypeEnum.post,
             bodyBytes: null,
           );
           expect(requestWithNullStream.bodyBytes, isNull);
@@ -586,7 +586,7 @@ void main() {
           const emptyStream = Stream<List<int>>.empty();
           final requestWithEmptyStream = EngineHttpRequest<String>(
             url: Uri.parse('https://api.example.com/empty-stream'),
-            method: EngineHttpMethod.post,
+            method: EngineHttpMethodTypeEnum.post,
             bodyBytes: emptyStream,
           );
           expect(requestWithEmptyStream.bodyBytes, equals(emptyStream));
@@ -608,7 +608,7 @@ void main() {
           for (final size in largeSizes) {
             final request = EngineHttpRequest<String>(
               url: Uri.parse('https://api.example.com/large-content'),
-              method: EngineHttpMethod.post,
+              method: EngineHttpMethodTypeEnum.post,
               contentLength: size,
             );
 
@@ -625,7 +625,7 @@ void main() {
             (final index) => Future(() {
                   final request = EngineHttpRequest<String>(
                     url: Uri.parse('https://api.example.com/concurrent/$index'),
-                    method: EngineHttpMethod.get,
+                    method: EngineHttpMethodTypeEnum.get,
                     headers: {'X-Request-ID': 'req-$index'},
                   );
 
@@ -645,7 +645,7 @@ void main() {
           for (var i = 0; i < 50; i++) {
             requests.add(EngineHttpRequest<String>(
               url: Uri.parse('https://api.example.com/memory/$i'),
-              method: EngineHttpMethod.get,
+              method: EngineHttpMethodTypeEnum.get,
               headers: {'X-Memory-Test': 'value-$i'},
             ));
           }

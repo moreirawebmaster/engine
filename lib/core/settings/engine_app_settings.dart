@@ -17,16 +17,16 @@ class EngineAppSettings {
   }
 
   static EngineAppSettings? _i;
-  late EngineEnvironment env;
+  late EngineEnvironmentTypeEnum env;
   late bool isDev;
   late String tokenApiUrl;
   late String refreshTokenApiUrl;
 
   /// Initializes the environment of the app.
   void _initEnv() {
-    env = EngineEnvironment.fromEnv(const String.fromEnvironment('env', defaultValue: 'dev'));
+    env = EngineEnvironmentTypeEnum.fromName(const String.fromEnvironment('env', defaultValue: 'dev'));
     tokenApiUrl = const String.fromEnvironment('tokenApiUrl');
     refreshTokenApiUrl = const String.fromEnvironment('refreshTokenApiUrl');
-    isDev = env == EngineEnvironment.dev || env == EngineEnvironment.intg;
+    isDev = env == EngineEnvironmentTypeEnum.dev || env == EngineEnvironmentTypeEnum.intg;
   }
 }

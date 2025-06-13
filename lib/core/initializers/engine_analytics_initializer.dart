@@ -9,7 +9,7 @@ class EngineAnalyticsInitializer implements IEngineBaseInitializer<EngineAnalyti
   final EngineAnalyticsModel? params;
 
   @override
-  final int priority = 2;
+  final int priority = 3;
 
   @override
   FutureOr<void> onInit() async {
