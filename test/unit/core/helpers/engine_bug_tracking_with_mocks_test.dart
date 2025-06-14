@@ -10,7 +10,7 @@ void main() {
     setUpAll(() async {
       // Initialize once with disabled services to avoid Firebase dependencies and late final issues
       testModel = EngineBugTrackingModel(
-        crashlyticsConfig: CrashlyticsConfig(enabled: false),
+        crashlyticsConfig: EngineCrashlyticsConfig(enabled: false),
         faroConfig: EngineFaroConfig(
           enabled: false,
           endpoint: '',
@@ -125,7 +125,7 @@ void main() {
         // Act & Assert - Test different model configurations (without initializing due to singleton)
         await expectLater(() async {
           final config1 = EngineBugTrackingModel(
-            crashlyticsConfig: CrashlyticsConfig(enabled: false),
+            crashlyticsConfig: EngineCrashlyticsConfig(enabled: false),
             faroConfig: EngineFaroConfig(
               enabled: false,
               endpoint: '',
@@ -136,7 +136,7 @@ void main() {
             ),
           );
           final config2 = EngineBugTrackingModel(
-            crashlyticsConfig: CrashlyticsConfig(enabled: false),
+            crashlyticsConfig: EngineCrashlyticsConfig(enabled: false),
             faroConfig: EngineFaroConfig(
               enabled: false,
               endpoint: '',

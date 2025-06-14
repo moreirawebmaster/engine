@@ -10,7 +10,7 @@ void main() {
     setUpAll(() async {
       // Inicializa uma única vez com um modelo desabilitado para evitar dependências do Firebase
       testModel = EngineBugTrackingModel(
-        crashlyticsConfig: CrashlyticsConfig(enabled: false),
+        crashlyticsConfig: EngineCrashlyticsConfig(enabled: false),
         faroConfig: EngineFaroConfig(
           enabled: false,
           endpoint: '',

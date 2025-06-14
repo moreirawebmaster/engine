@@ -15,7 +15,7 @@ void main() {
 
       // Initialize once with disabled services to avoid Firebase dependencies and late final issues
       testModel = EngineBugTrackingModel(
-        crashlyticsConfig: CrashlyticsConfig(enabled: false),
+        crashlyticsConfig: EngineCrashlyticsConfig(enabled: false),
         faroConfig: EngineFaroConfig(
           enabled: false,
           endpoint: '',
@@ -48,7 +48,7 @@ void main() {
       test('should handle different model configurations', () async {
         // Test that different models can be created (even if not initialized due to singleton)
         final crashlyticsOnlyModel = EngineBugTrackingModel(
-          crashlyticsConfig: CrashlyticsConfig(enabled: true),
+          crashlyticsConfig: EngineCrashlyticsConfig(enabled: true),
           faroConfig: EngineFaroConfig(
             enabled: false,
             endpoint: '',
@@ -60,7 +60,7 @@ void main() {
         );
 
         final faroOnlyModel = EngineBugTrackingModel(
-          crashlyticsConfig: CrashlyticsConfig(enabled: false),
+          crashlyticsConfig: EngineCrashlyticsConfig(enabled: false),
           faroConfig: EngineFaroConfig(
             enabled: true,
             endpoint: 'https://faro-collector.example.com/collect',
@@ -72,7 +72,7 @@ void main() {
         );
 
         final bothEnabledModel = EngineBugTrackingModel(
-          crashlyticsConfig: CrashlyticsConfig(enabled: true),
+          crashlyticsConfig: EngineCrashlyticsConfig(enabled: true),
           faroConfig: EngineFaroConfig(
             enabled: true,
             endpoint: 'https://faro-collector.example.com/collect',
@@ -112,10 +112,10 @@ void main() {
       });
 
       test('should validate crashlytics configuration properties', () async {
-        final crashlyticsConfig = CrashlyticsConfig(enabled: true);
+        final crashlyticsConfig = EngineCrashlyticsConfig(enabled: true);
         expect(crashlyticsConfig.enabled, isTrue);
 
-        final disabledConfig = CrashlyticsConfig(enabled: false);
+        final disabledConfig = EngineCrashlyticsConfig(enabled: false);
         expect(disabledConfig.enabled, isFalse);
       });
     });
@@ -123,7 +123,7 @@ void main() {
     group('Configuration Tests', () {
       test('should handle model with different configurations', () async {
         final completeModel = EngineBugTrackingModel(
-          crashlyticsConfig: CrashlyticsConfig(enabled: true),
+          crashlyticsConfig: EngineCrashlyticsConfig(enabled: true),
           faroConfig: EngineFaroConfig(
             enabled: true,
             endpoint: 'https://faro.grafana.com/collect',
@@ -145,7 +145,7 @@ void main() {
 
       test('should handle empty configuration values', () async {
         final emptyModel = EngineBugTrackingModel(
-          crashlyticsConfig: CrashlyticsConfig(enabled: false),
+          crashlyticsConfig: EngineCrashlyticsConfig(enabled: false),
           faroConfig: EngineFaroConfig(
             enabled: false,
             endpoint: '',

@@ -43,7 +43,6 @@ class EngineFirebaseModel {
     final String? databaseURL,
     final String? storageBucket,
     final String? measurementId,
-    final bool crashlyticsEnabled = true,
   }) =>
       EngineFirebaseModel(
         name: name,
@@ -69,7 +68,6 @@ class EngineFirebaseModel {
     final String? iosClientId,
     final String? iosBundleId,
     final String? appGroupId,
-    final bool crashlyticsEnabled = true,
   }) =>
       EngineFirebaseModel(
         name: name,

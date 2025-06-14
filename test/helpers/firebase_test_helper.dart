@@ -46,7 +46,7 @@ class FirebaseTestHelper {
       // Arrange
       setupFirebaseMocks();
       final model = EngineBugTrackingModel(
-        crashlyticsConfig: CrashlyticsConfig(enabled: true),
+        crashlyticsConfig: EngineCrashlyticsConfig(enabled: true),
         faroConfig: EngineFaroConfig(
           enabled: false,
           endpoint: '',
@@ -230,7 +230,7 @@ class FirebaseTestHelper {
     test('$testName - with Firebase Crashlytics disabled', () async {
       // Arrange
       final model = EngineBugTrackingModel(
-        crashlyticsConfig: CrashlyticsConfig(enabled: false),
+        crashlyticsConfig: EngineCrashlyticsConfig(enabled: false),
         faroConfig: EngineFaroConfig(
           enabled: false,
           endpoint: '',
@@ -252,7 +252,7 @@ class FirebaseTestHelper {
 
   /// Creates BugTracking model for unit tests
   static EngineBugTrackingModel createBugTrackingModel([final bool enabled = true]) => EngineBugTrackingModel(
-        crashlyticsConfig: CrashlyticsConfig(enabled: enabled),
+        crashlyticsConfig: EngineCrashlyticsConfig(enabled: enabled),
         faroConfig: EngineFaroConfig(
           enabled: false,
           endpoint: '',
